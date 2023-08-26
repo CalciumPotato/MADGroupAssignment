@@ -5,19 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/black"
+    android:background="#313338"
 
     tools:context=".MainActivity" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#1e1f22"
         android:orientation="horizontal"
         android:paddingLeft="2dp"
         android:paddingTop="6dp"
         android:paddingRight="2dp"
-        android:paddingBottom="6dp"
-        android:background="#1e1f22" >
+        android:paddingBottom="6dp">
 
         <ImageView
             android:id="@+id/imageView2"
@@ -41,95 +41,194 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#313338">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#1e1f22" >
+            android:background="#232428">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/img_profile_picture"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:padding="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@drawable/img_profile_picture" />
+
+            <TextView
+                android:id="@+id/tv_profile_username"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#1e1f22"
-                android:orientation="horizontal">
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="Vigna simp, Kuki &amp; Dehya enjoyer"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                app:layout_constraintStart_toEndOf="@+id/img_profile_picture"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="140dp"
-                    android:layout_height="140dp"
-                    android:layout_gravity="center"
-                    android:padding="12dp"
-                    tools:srcCompat="@drawable/img_profile_picture" />
+            <TextView
+                android:id="@+id/tv_profile_userID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="\@calciumpotato"
+                android:textColor="#979ba2"
+                android:textSize="16dp"
+                app:layout_constraintStart_toEndOf="@+id/img_profile_picture"
+                app:layout_constraintTop_toBottomOf="@+id/tv_profile_username" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="8dp">
+            <Button
+                android:id="@+id/btn_profile_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#5865f1"
+                android:text="Edit User Profile"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/img_profile_picture"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-                    <TextView
-                        android:id="@+id/tv_profile_username"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="8dp"
-                        android:paddingBottom="8dp"
-                        android:text="Vigna simp, Kuki &amp; Dehya enjoyer"
-                        android:textColor="@color/white"
-                        android:textSize="16dp" />
-
-                    <TextView
-                        android:id="@+id/tv_profile_userID"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="\@calciumpotato"
-                        android:textColor="#979ba2"
-                        android:textSize="16dp" />
-
-                    <Button
-                        android:id="@+id/btn_profile_edit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="4dp"
-                        android:backgroundTint="#5865f1"
-                        android:text="Edit User Profile"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:background="#313338" >
-
-                <Button
-                    android:id="@+id/btn_profile_swap1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/white"
-                    android:textAllCaps="false"
-                    android:textSize="16dp"
-                    android:text="Upcoming" />
-
-                <Button
-                    android:id="@+id/btn_profile_swap2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#313338"
-                    android:textColor="@color/white"
-                    android:textAllCaps="false"
-                    android:textSize="16dp"
-                    android:text="Past" />
-            </LinearLayout>
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
     </ScrollView>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_profile_swap1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="#42444a"
+            android:text="Upcoming"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_profile_swap2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_profile_swap2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="#2b2d31"
+            android:text="Past"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_profile_swap1"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img_navbar_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/img_navbar_item2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_home_24" />
+
+        <ImageView
+            android:id="@+id/img_navbar_item2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/img_navbar_item3"
+            app:layout_constraintStart_toEndOf="@+id/img_navbar_item1"
+            app:layout_constraintTop_toTopOf="@+id/img_navbar_item1"
+            app:srcCompat="@drawable/ic_baseline_calendar_month_24" />
+
+        <ImageView
+            android:id="@+id/img_navbar_item3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/img_navbar_item4"
+            app:layout_constraintStart_toEndOf="@+id/img_navbar_item2"
+            app:layout_constraintTop_toTopOf="@+id/img_navbar_item2"
+            app:srcCompat="@drawable/ic_baseline_qr_code_scanner_24" />
+
+        <ImageView
+            android:id="@+id/img_navbar_item4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/img_navbar_item3"
+            app:layout_constraintTop_toTopOf="@+id/img_navbar_item3"
+            app:srcCompat="@drawable/ic_baseline_person_24" />
+
+        <TextView
+            android:id="@+id/tv_navbar_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Home"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/img_navbar_item1"
+            app:layout_constraintStart_toStartOf="@+id/img_navbar_item1"
+            app:layout_constraintTop_toBottomOf="@+id/img_navbar_item1" />
+
+        <TextView
+            android:id="@+id/tv_navbar_item2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Calendar"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/img_navbar_item2"
+            app:layout_constraintStart_toStartOf="@+id/img_navbar_item2"
+            app:layout_constraintTop_toBottomOf="@+id/img_navbar_item2" />
+
+        <TextView
+            android:id="@+id/tv_navbar_item3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Scan QR"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/img_navbar_item3"
+            app:layout_constraintStart_toStartOf="@+id/img_navbar_item3"
+            app:layout_constraintTop_toBottomOf="@+id/img_navbar_item3" />
+
+        <TextView
+            android:id="@+id/tv_navbar_item4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="My Event"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/img_navbar_item4"
+            app:layout_constraintStart_toStartOf="@+id/img_navbar_item4"
+            app:layout_constraintTop_toBottomOf="@+id/img_navbar_item4" />
+    </android.support.constraint.ConstraintLayout>
+
 </LinearLayout>
