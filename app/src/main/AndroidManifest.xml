@@ -10,7 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BerryDaBest">
         <activity
-            android:name=".MainActivity"
+            android:name=".Activity_EditProfile"
+            android:exported="false" />
+        <activity
+            android:name=".Activity_Profile"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
