@@ -1,18 +1,16 @@
 package com.example.berrydabest;
-
 import android.content.Intent;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,7 +23,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
 public class SignUp extends AppCompatActivity {
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +36,7 @@ public class SignUp extends AppCompatActivity {
 
         setContentView(R.layout.activity_sign_up);
         Handler eHandler = new Handler();
-        Animation floating = AnimationUtils.loadAnimation(this, R.anim.floating);
-        ImageView google_btn = findViewById(R.id.google);
-        google_btn.startAnimation(floating);
+
 
 
         EditText email = findViewById(R.id.email);
@@ -59,11 +59,18 @@ public class SignUp extends AppCompatActivity {
                     showMessage("Invalid Phone Number!");
                     return;
                 }
+
                 if(isValidEmail(email.getText().toString())) {
+
+
                     MyThread connectingThread = new MyThread(email.getText().toString(),
-                            username.getText().toString(), password.getText().toString(), phone.getText().toString(), eHandler);
+                            username.getText().toString(), password.getText().toString(),
+                            phone.getText().toString(), eHandler);
+
+
                     connectingThread.start();
                 }
+
                 else{
                     showMessage("Email format is invalid!");
                 }
@@ -71,17 +78,24 @@ public class SignUp extends AppCompatActivity {
         });
 
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent back_intent = new Intent(this, MainActivity.class);
         ImageView back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(intent);
+                startActivity(back_intent);
                 overridePendingTransition(R.anim.left1, R.anim.right1);
             }
         });
 
+
+
+
+
+
     }
+
+
     private class MyThread extends Thread{
         private String email;
         private String username;
@@ -142,17 +156,14 @@ public class SignUp extends AppCompatActivity {
                 output.write(jsonObject.toString().getBytes());
                 output.flush();
 
-                InputStream input = hc.getInputStream();
-                String result = readStream(input);
 
-                if(hc.getResponseCode() == 200){
-                    Log.i("SignUp","Response: " + result);
-
-
-                }else if(hc.getResponseCode() == 201){
+                if(hc.getResponseCode() == 201){
                     mHandler.post(new Runnable() {
                         public void run() {
                             showMessage("                  Congratulation !"+"\nAccount has been created successfully !");
+                            Intent back_intent = new Intent(SignUp.this, MainActivity.class);
+                            startActivity(back_intent);
+                            overridePendingTransition(R.anim.left1, R.anim.right1);
                         }
                     });
                 }
