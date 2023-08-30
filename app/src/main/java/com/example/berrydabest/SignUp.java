@@ -102,6 +102,7 @@ public class SignUp extends AppCompatActivity {
         private String password;
         private String phone;
 
+
         private Handler mHandler;
 
         public MyThread(String email,String username,String password,String phone, Handler handler){
@@ -151,6 +152,7 @@ public class SignUp extends AppCompatActivity {
                 jsonObject.put("Password" , password);
                 jsonObject.put("Phone" , phone);
                 jsonObject.put("Picture" , null);
+                jsonObject.put("Google_Acc" , false);
                 hc.setDoOutput(true);
                 OutputStream output = hc.getOutputStream();
                 output.write(jsonObject.toString().getBytes());

@@ -199,6 +199,27 @@ public class MainActivity extends AppCompatActivity {
 
         public void run(){
             try {
+                URL url1 = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/rest/v1/User?" + "Email=eq." + email);
+
+
+                HttpURLConnection hc1 = (HttpURLConnection) url1.openConnection();
+                hc1.setRequestProperty("apikey" , getString(R.string.SUPABASE_KEY));
+                hc1.setRequestProperty("Authorization" ,"Bearer " + getString(R.string.SUPABASE_KEY));
+
+
+
+                InputStream input1 = hc1.getInputStream();
+                String result1 = readStream(input1);
+                JSONArray jsonArray = new JSONArray(result1);
+                if(jsonArray.getJSONObject(0).getBoolean("Google_Acc") == false){
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            showMessage(" Switch another Gmail !");
+                        }
+                    });
+                    return;
+                }
+
                 URL url = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/rest/v1/User?");
                 HttpURLConnection hc = (HttpURLConnection) url.openConnection();
                 hc.setRequestMethod("POST");
@@ -214,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
                 jsonObject.put("Password" , null);
                 jsonObject.put("Phone" , null);
                 jsonObject.put("Picture" , null);
+                jsonObject.put("Google_Acc" , true);
 
                 hc.setDoOutput(true);
                 OutputStream output = hc.getOutputStream();
@@ -226,6 +248,15 @@ public class MainActivity extends AppCompatActivity {
                             //Intent to next page
 
                             showMessage("                  Congratulation !"+"\nAccount has been created successfully !");
+                        }
+                    });
+                }
+                else if(hc.getResponseCode() == 409){
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            //Intent to next page
+
+                            showMessage(" Account is existed !");
                         }
                     });
                 }
