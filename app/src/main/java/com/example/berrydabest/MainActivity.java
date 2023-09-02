@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
-        Intent intent = new Intent(this, SignUp.class);
+        Intent intent = new Intent(this, Qr_Scan.class);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,7 +158,8 @@ public class MainActivity extends AppCompatActivity {
                 if(hc.getResponseCode() == 200) {
                     Log.i("MainActivity", "Response: " + result);
 
-                    if(jsonArray.getJSONObject(0).getString("Password").equalsIgnoreCase(password)) {
+                    if(jsonArray.getJSONObject(0).getString("Password").equals(password) &&
+                            jsonArray.getJSONObject(0).getBoolean("Google_Acc") == false) {
                         mHandler.post(new Runnable() {
                             public void run() {
                                 showMessage("Success!");
