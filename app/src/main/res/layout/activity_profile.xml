@@ -80,7 +80,7 @@
                         android:layout_marginEnd="16dp"
                         android:paddingTop="8dp"
                         android:paddingBottom="8dp"
-                        android:text="Vigna simp, Kuki &amp; Dehya enjoyer"
+                        android:text="Username"
                         android:textColor="@color/white"
                         android:textSize="16dp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -88,11 +88,11 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/tv_profile_userID"
+                        android:id="@+id/tv_profile_email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="\@calciumpotato"
+                        android:text="Email address"
                         android:textColor="#979ba2"
                         android:textSize="16dp"
                         app:layout_constraintStart_toEndOf="@+id/img_profile_picture"
@@ -201,23 +201,27 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/img_profile_eventPic"
                             app:layout_constraintTop_toTopOf="@+id/img_profile_eventPic" />
+
+                        <TextView
+                            android:id="@+id/tv_profile_eventDesc"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:text="This event is a sleeping session for UTAR students who are not well-rested to sleep together."
+                            app:layout_constraintBottom_toBottomOf="@+id/img_profile_eventPic"
+                            app:layout_constraintEnd_toEndOf="@+id/tv_profile_eventName"
+                            app:layout_constraintStart_toStartOf="@+id/tv_profile_eventName"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_profile_eventDate" />
+
+                        <TextView
+                            android:id="@+id/tv_profile_eventDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="2023-08-31"
+                            app:layout_constraintEnd_toEndOf="@+id/tv_profile_eventName"
+                            app:layout_constraintStart_toStartOf="@+id/tv_profile_eventName"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_profile_eventName" />
                     </android.support.constraint.ConstraintLayout>
 
-                    <TextView
-                        android:id="@+id/textView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1. \n 2. \n 3. \n 4. \n 5. \n 6. \n 7. \n 8. \n 9. \n 10."
-                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-                        tools:layout_editor_absoluteX="213dp" />
-
-                    <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1. \n 2. \n 3. \n 4. \n 5. \n 6. \n 7. \n 8. \n 9. \n 10."
-                        app:layout_constraintTop_toBottomOf="@+id/textView3"
-                        tools:layout_editor_absoluteX="260dp" />
                 </android.support.constraint.ConstraintLayout>
 
             </LinearLayout>
