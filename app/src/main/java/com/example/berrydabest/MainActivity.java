@@ -1,6 +1,8 @@
 package com.example.berrydabest;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        if(doesSharedPreferencesExist(this,"Secret") == true || acct != null){
+            showMessage("Auto LogIn");
+            //put intent
+            return;
+        }
         TextView signup = findViewById(R.id.sign);
         EditText email = findViewById(R.id.email);
         EditText password = findViewById(R.id.password);
@@ -77,11 +85,10 @@ public class MainActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
-        Intent intent = new Intent(this, Qr_Scan.class);
+        Intent intent = new Intent(this, QR_generate.class);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 startActivity(intent);
                 overridePendingTransition(R.anim.right, R.anim.left);
             }
@@ -161,8 +168,11 @@ public class MainActivity extends AppCompatActivity {
                     if(jsonArray.getJSONObject(0).getString("Password").equals(password) &&
                             jsonArray.getJSONObject(0).getBoolean("Google_Acc") == false) {
                         mHandler.post(new Runnable() {
+
                             public void run() {
                                 showMessage("Success!");
+                                appendPreference(MainActivity.this,"Password",password);
+                                appendPreference(MainActivity.this,"Email",email);
                             }
                         });
                     }
@@ -212,13 +222,15 @@ public class MainActivity extends AppCompatActivity {
                 InputStream input1 = hc1.getInputStream();
                 String result1 = readStream(input1);
                 JSONArray jsonArray = new JSONArray(result1);
-                if(jsonArray.getJSONObject(0).getBoolean("Google_Acc") == false){
-                    mHandler.post(new Runnable() {
-                        public void run() {
-                            showMessage(" Switch another Gmail !");
-                        }
-                    });
-                    return;
+                if(jsonArray.length()!=0) {
+                    if (jsonArray.getJSONObject(0).getBoolean("Google_Acc") == false) {
+                        mHandler.post(new Runnable() {
+                            public void run() {
+                                showMessage(" Switch another Gmail !");
+                            }
+                        });
+                        return;
+                    }
                 }
 
                 URL url = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/rest/v1/User?");
@@ -247,8 +259,8 @@ public class MainActivity extends AppCompatActivity {
                     mHandler.post(new Runnable() {
                         public void run() {
                             //Intent to next page
-
-                            showMessage("                  Congratulation !"+"\nAccount has been created successfully !");
+                            appendPreference(MainActivity.this,"Email",email);
+                            showMessage("Let's Go !");
                         }
                     });
                 }
@@ -298,8 +310,28 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-                    // You can perform additional actions here, such as updating UI or navigating to a different screen
 
+    public void appendPreference(Context context, String key, String valueToAppend) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Secret", Context.MODE_PRIVATE);
+        String existingValue = sharedPreferences.getString(key, "");
+
+        // Append the new value to the existing value, separated by a delimiter (e.g., comma)
+        String updatedValue = existingValue + valueToAppend;
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, updatedValue);
+        editor.apply();
+    }
+
+    public static String readPreference(Context context, String key, String defaultValue) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Secret", Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, defaultValue);
+    }
+
+    public static boolean doesSharedPreferencesExist(Context context, String prefsName) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
+        return !sharedPreferences.getAll().isEmpty();
+    }
 
 
 }
