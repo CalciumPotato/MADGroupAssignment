@@ -6,15 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".Qr_Scan">
 
-    <ImageView
-        android:id="@+id/qr"
-        android:layout_width="215dp"
-        android:layout_height="191dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="524dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/add" />
+    <me.dm7.barcodescanner.zxing.ZXingScannerView
+        android:id="@+id/camera_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

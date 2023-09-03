@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -13,9 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BerryDaBest">
-        <activity
-            android:name=".QR_generate"
-            android:exported="false" />
         <activity
             android:name=".Image"
             android:exported="false" />
@@ -30,9 +29,6 @@
         </activity>
         <activity
             android:name=".SignUp"
-            android:exported="false" />
-        <activity
-            android:name=".Qr_Scan"
             android:exported="false" />
     </application>
 
