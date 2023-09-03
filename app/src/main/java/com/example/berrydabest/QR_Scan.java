@@ -103,7 +103,7 @@ public class QR_Scan extends AppCompatActivity {
                     String scannedData = result.getText();
                     QR_thread connectingThread = new QR_thread(scannedData,eHandler);
                     connectingThread.start();
-                    showToast(scannedData);
+                    finish();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -123,28 +123,16 @@ public class QR_Scan extends AppCompatActivity {
                 } else {
                     // Handle the scanned data
                     String scannedData = result.getContents();
-                    Uri selectedImageUri = data.getData();
+
 
                     // Now you can use selectedImageUri to read the image and perform QR code scanning
                     try {
-                        InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 
-                        // Convert the Bitmap to a binary bitmap for QR code scanning
-                        int[] intArray = new int[bitmap.getWidth() * bitmap.getHeight()];
-                        bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-                        LuminanceSource source = new RGBLuminanceSource(bitmap.getWidth(), bitmap.getHeight(), intArray);
-                        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
 
-                        // Initialize the QR code reader
-                        Reader reader1 = new MultiFormatReader();
-                        Result result1 = reader1.decode(binaryBitmap);
-
-                        // Handle the QR code scan result
-                        String scannedData1 = result1.getText();
-                        QR_thread connectingThread = new QR_thread(scannedData1,eHandler);
+                        QR_thread connectingThread = new QR_thread(scannedData,eHandler);
                         connectingThread.start();
-                        showToast(scannedData1);
+                        finish();
+
 
                     } catch (Exception e) {
                         e.printStackTrace();
