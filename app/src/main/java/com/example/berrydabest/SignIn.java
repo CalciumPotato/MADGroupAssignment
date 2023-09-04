@@ -85,7 +85,7 @@ public class SignIn extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
-        Intent intent = new Intent(this, QR_Scan.class);
+        Intent intent = new Intent(this, Activity_Profile.class);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
