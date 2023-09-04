@@ -176,6 +176,10 @@ public class SignIn extends AppCompatActivity {
                                 showMessage("Success!");
                                 appendPreference(SignIn.this,"Password",password);
                                 appendPreference(SignIn.this,"Email",email);
+                                Intent intent = new Intent(SignIn.this, MainPage.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.right, R.anim.left);
+                                appendPreference(SignIn.this,"Email",email);
                                 finish();
                             }
                         });

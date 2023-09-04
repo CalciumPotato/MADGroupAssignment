@@ -33,7 +33,7 @@ public class MyEvent extends AppCompatActivity {
         setContentView(R.layout.activity_my_event);
 
         Handler handler = new Handler();
-        String email = "yikhengl@gmail.com";
+        String email = "dllm@gmail.com";
 
         LinearLayout ll = findViewById(R.id.eventLayout);
         Button upbtn = findViewById(R.id.upcoming);
