@@ -163,66 +163,7 @@
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/layout_profile_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/constraintLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="#393b41"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:id="@+id/img_profile_eventPic"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="8dp"
-                            android:src="@drawable/img_profile_picture"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/tv_profile_eventName"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="8dp"
-                            android:text="Event name"
-                            android:textSize="20dp"
-                            android:textStyle="bold"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/img_profile_eventPic"
-                            app:layout_constraintTop_toTopOf="@+id/img_profile_eventPic" />
-
-                        <TextView
-                            android:id="@+id/tv_profile_eventDesc"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:text="This event is a sleeping session for UTAR students who are not well-rested to sleep together."
-                            app:layout_constraintBottom_toBottomOf="@+id/img_profile_eventPic"
-                            app:layout_constraintEnd_toEndOf="@+id/tv_profile_eventName"
-                            app:layout_constraintStart_toStartOf="@+id/tv_profile_eventName"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_profile_eventDate" />
-
-                        <TextView
-                            android:id="@+id/tv_profile_eventDate"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:text="2023-08-31"
-                            app:layout_constraintEnd_toEndOf="@+id/tv_profile_eventName"
-                            app:layout_constraintStart_toStartOf="@+id/tv_profile_eventName"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_profile_eventName" />
-                    </android.support.constraint.ConstraintLayout>
-
-                </android.support.constraint.ConstraintLayout>
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
         </ScrollView>

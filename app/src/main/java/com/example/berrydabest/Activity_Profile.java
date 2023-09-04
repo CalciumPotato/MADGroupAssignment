@@ -1,14 +1,18 @@
 package com.example.berrydabest;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -287,54 +291,129 @@ public class Activity_Profile extends AppCompatActivity {
 
                                         if (jsonArray3.length() > 0) {
 
+                                            ConstraintLayout previousConstraintLayout = null; // To keep track of the previous ConstraintLayout
+
                                             // C8. jsonArray[i]
-/*                                            for (int j = 0; j< jsonArray3.length(); j++) {
+                                            for (int j = 0; j< jsonArray3.length(); j++) {
                                                 JSONObject jsonObject3 = jsonArray3.getJSONObject(j);
 
                                                 String eventName = jsonObject3.optString("Event_Name");
                                                 String eventDate = jsonObject3.optString("Event_Date");
                                                 String eventDescription = jsonObject3.optString("Event_Description");
 
-                                                // C9. Update your UI elements (e.g., TextViews) with the retrieved data
-                                                int finalJ = j;
+                                                // Assuming you have a parent ConstraintLayout with id "layout_profile_content"
+                                                ConstraintLayout parentLayout = findViewById(R.id.layout_profile_content);
 
+
+                                                // Create a new ConstraintLayout
+                                                ConstraintLayout constraintLayout = new ConstraintLayout(Activity_Profile.this);
+                                                constraintLayout.setId(View.generateViewId());
+                                                constraintLayout.setBackgroundColor(getResources().getColor(R.color.purple_200)); // Set the background color
+
+                                                // Create an ImageView
+                                                ImageView imageView = new ImageView(Activity_Profile.this);
+                                                imageView.setId(View.generateViewId());
+                                                imageView.setImageResource(R.drawable.img_profile_picture); // Set the image resource
+
+                                                // Create TextView for event name
+                                                TextView tvEventName = new TextView(Activity_Profile.this);
+                                                tvEventName.setId(View.generateViewId());
+                                                tvEventName.setText(eventName);
+                                                tvEventName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20); // Set text size
+                                                tvEventName.setTypeface(tvEventName.getTypeface(), Typeface.BOLD); // Set text style
+
+                                                // Create TextView for event date
+                                                TextView tvEventDate = new TextView(Activity_Profile.this);
+                                                tvEventDate.setId(View.generateViewId());
+                                                tvEventDate.setText(eventDate);
+
+                                                // Create TextView for event description
+                                                TextView tvEventDesc = new TextView(Activity_Profile.this);
+                                                tvEventDesc.setId(View.generateViewId());
+                                                tvEventDesc.setText(eventDescription);
+
+                                                // Add the ImageView and TextViews to the ConstraintLayout
+                                                constraintLayout.addView(imageView);
+                                                constraintLayout.addView(tvEventName);
+                                                constraintLayout.addView(tvEventDate);
+                                                constraintLayout.addView(tvEventDesc);
+
+                                                // Set constraints for the views within the ConstraintLayout
+                                                ConstraintSet constraintSet = new ConstraintSet();
+                                                constraintSet.clone(constraintLayout);
+
+
+                                                // For the first ConstraintLayout, constrain it to the top of the parent ConstraintLayout
+                                                if (previousConstraintLayout == null) {
+                                                    constraintSet.connect(constraintLayout.getId(), ConstraintSet.TOP, parentLayout.getId(), ConstraintSet.TOP);
+
+                                                } else {
+                                                    // Constrain the top of the ConstraintLayout to the bottom of the previous ConstraintLayout (if it's not the first one)
+                                                    constraintSet.connect(constraintLayout.getId(), ConstraintSet.TOP, previousConstraintLayout.getId(), ConstraintSet.BOTTOM);
+                                                }
+
+                                                constraintSet.connect(imageView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+                                                constraintSet.connect(imageView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+                                                constraintSet.connect(imageView.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+                                                constraintSet.constrainWidth(imageView.getId(), ConstraintSet.WRAP_CONTENT);
+                                                constraintSet.constrainHeight(imageView.getId(), ConstraintSet.WRAP_CONTENT);
+
+                                                constraintSet.connect(tvEventName.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END);
+                                                constraintSet.connect(tvEventName.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+                                                constraintSet.connect(tvEventName.getId(), ConstraintSet.TOP, imageView.getId(), ConstraintSet.TOP);
+                                                constraintSet.setHorizontalBias(tvEventName.getId(), 0.0f);
+                                                constraintSet.constrainWidth(tvEventName.getId(), ConstraintSet.WRAP_CONTENT); // Match constraints
+                                                constraintSet.constrainHeight(tvEventName.getId(), ConstraintSet.WRAP_CONTENT);
+
+                                                constraintSet.connect(tvEventDate.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END);
+                                                constraintSet.connect(tvEventDate.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+                                                constraintSet.connect(tvEventDate.getId(), ConstraintSet.TOP, tvEventName.getId(), ConstraintSet.BOTTOM);
+                                                constraintSet.setHorizontalBias(tvEventDate.getId(), 0.0f);
+                                                constraintSet.constrainWidth(tvEventDate.getId(), ConstraintSet.WRAP_CONTENT); // Match constraints
+                                                constraintSet.constrainHeight(tvEventDate.getId(), ConstraintSet.WRAP_CONTENT);
+
+                                                constraintSet.connect(tvEventDesc.getId(), ConstraintSet.START, imageView.getId(), ConstraintSet.END);
+                                                constraintSet.connect(tvEventDesc.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+                                                constraintSet.connect(tvEventDesc.getId(), ConstraintSet.TOP, tvEventDate.getId(), ConstraintSet.BOTTOM);
+                                                constraintSet.connect(tvEventDesc.getId(), ConstraintSet.BOTTOM, imageView.getId(), ConstraintSet.BOTTOM);
+                                                constraintSet.constrainWidth(tvEventDesc.getId(), 0); // Match constraints
+                                                constraintSet.constrainHeight(tvEventDesc.getId(), 0); // Match constraints
+
+                                                // Create layout params for the ConstraintLayout
+                                                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+                                                        ConstraintLayout.LayoutParams.MATCH_PARENT, // Match the parent's width
+                                                        ConstraintLayout.LayoutParams.WRAP_CONTENT // Adjust height as needed
+                                                );
+
+                                                int marginInPixels = (int) TypedValue.applyDimension(
+                                                        TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()
+                                                );
+
+                                                layoutParams.setMargins(marginInPixels, marginInPixels, marginInPixels, marginInPixels);
+
+                                                constraintLayout.setLayoutParams(layoutParams);
+
+                                                int paddingInPixels = (int) TypedValue.applyDimension(
+                                                        TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()
+                                                );
+
+                                                // Apply padding to the ConstraintLayout
+                                                constraintLayout.setPadding(paddingInPixels, paddingInPixels, paddingInPixels, paddingInPixels);
+
+                                                constraintSet.applyTo(constraintLayout);
+
+                                                // Add the ConstraintLayout to the parent ConstraintLayout
                                                 runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        // Create TextViews for each field
-                                                        TextView tvEventName = new TextView(Activity_Profile.this);
-                                                        TextView tvEventDate = new TextView(Activity_Profile.this);
-                                                        TextView tvEventDescription = new TextView(Activity_Profile.this);
-
-                                                        // Set text for the TextViews
-                                                        tvEventName.setText(eventName);
-                                                        tvEventDate.setText(eventDate);
-                                                        tvEventDescription.setText(eventDescription);
-
-                                                        // Add TextViews to the ConstraintLayout
-                                                        layout_profile_content.addView(tvEventName);
-                                                        layout_profile_content.addView(tvEventDate);
-                                                        layout_profile_content.addView(tvEventDescription);
-
-                                                        // Create layout params for the TextViews
-                                                        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-                                                                ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                                                                ConstraintLayout.LayoutParams.WRAP_CONTENT
-                                                        );
-
-                                                        // - Apply constraints to position the TextViews
-                                                        if (finalJ > 4) {
-                                                            // For TextViews after the first one, set constraints to position them below the previous TextView
-                                                            params.topToBottom = layout_profile_content.getChildAt(finalJ - 3).getId(); // Subtract 3 because you're adding 3 TextViews at each iteration
-                                                        }
-
-                                                        // Apply the layout params to the TextView
-                                                        tvEventName.setLayoutParams(params);
-                                                        tvEventDate.setLayoutParams(params);
-                                                        tvEventDescription.setLayoutParams(params);
+                                                        parentLayout.addView(constraintLayout);
                                                     }
                                                 });
-                                            }*/
+
+                                                // Update the previous ConstraintLayout to the current one for the next iteration
+                                                previousConstraintLayout = constraintLayout;
+
+                                            }
 
 /*
                                             runOnUiThread(new Runnable() {
@@ -387,64 +466,6 @@ public class Activity_Profile extends AppCompatActivity {
                                                 }
                                             });
 */
-
-// Initialize a variable to keep track of the previous ConstraintLayout
-                                            ConstraintLayout previousLayout = null;
-                                            int yOffset = 0; // Initialize the Y-offset
-
-                                            for (int j = 0; j < jsonArray3.length(); j++) {
-                                                JSONObject jsonObject3 = null;
-                                                try {
-                                                    jsonObject3 = jsonArray3.getJSONObject(j);
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-
-                                                // Create a new ConstraintLayout
-                                                ConstraintLayout constraintLayout = new ConstraintLayout(Activity_Profile.this);
-                                                constraintLayout.setId(View.generateViewId()); // Generate a unique ID for each ConstraintLayout
-
-                                                // Calculate the new Y-coordinate for this ConstraintLayout
-                                                int newY = yOffset + (j * 20);
-
-                                                // Set the Y-coordinate for the ConstraintLayout
-                                                ConstraintLayout.LayoutParams constraintLayoutParams = new ConstraintLayout.LayoutParams(
-                                                        ConstraintLayout.LayoutParams.MATCH_PARENT,
-                                                        ConstraintLayout.LayoutParams.WRAP_CONTENT
-                                                );
-                                                constraintLayoutParams.topMargin = newY;
-                                                constraintLayout.setLayoutParams(constraintLayoutParams);
-
-                                                String eventName = jsonObject3.optString("Event_Name");
-                                                String eventDate = jsonObject3.optString("Event_Date");
-                                                String eventDescription = jsonObject3.optString("Event_Description");
-
-                                                // Create TextViews for each field
-                                                TextView tvEventName = new TextView(Activity_Profile.this);
-                                                TextView tvEventDate = new TextView(Activity_Profile.this);
-                                                TextView tvEventDescription = new TextView(Activity_Profile.this);
-
-                                                // Set text for the TextViews
-                                                tvEventName.setText(eventName);
-                                                tvEventDate.setText(eventDate);
-                                                tvEventDescription.setText(eventDescription);
-
-                                                // Add TextViews to the ConstraintLayout
-                                                constraintLayout.addView(tvEventName);
-                                                constraintLayout.addView(tvEventDate);
-                                                constraintLayout.addView(tvEventDescription);
-
-                                                // Add the ConstraintLayout to the parent ConstraintLayout
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        layout_profile_content.addView(constraintLayout);
-                                                    }
-                                                });
-
-                                                // Update the previousLayout to the current ConstraintLayout for the next iteration
-                                                previousLayout = constraintLayout;
-                                            }
 
                                         }
                                     } catch (JSONException e) {
