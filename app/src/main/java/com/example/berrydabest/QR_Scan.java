@@ -1,6 +1,7 @@
 package com.example.berrydabest;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -9,10 +10,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.zxing.BinaryBitmap;
@@ -45,20 +46,29 @@ public class QR_Scan extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_scan);
 
-        selectFromGalleryButton = findViewById(R.id.selectFromGalleryButton);
+        showAlertDialog(R.layout.activity_qr_scan);
 
-        selectFromGalleryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Launch the gallery picker
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, 123); // Use a unique request code
-            }
-        });
+    }
 
-        // Start the QR code scanner
-        startQRCodeScanner();
+    public void showAlertDialog(int view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose the way to scan QR")
+                .setMessage("Select one of the following options:")
+                .setPositiveButton("QR Scanner", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Handle Option 1 click
+                        startQRCodeScanner();
+                    }
+                })
+                .setNegativeButton("QR from Gallery", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_PICK);
+                        intent.setType("image/*");
+                        startActivityForResult(intent, 123); // Use a unique request code
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert) // Optional: Set an icon
+                .show();
     }
 
     private void startQRCodeScanner() {
