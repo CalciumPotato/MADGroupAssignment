@@ -36,7 +36,7 @@ public class MainPage extends AppCompatActivity {
         setContentView(R.layout.activity_main_page);
 
         Handler handler = new Handler();
-        String email = "yikhengl@gmail.com";
+        String email = "dllm@gmail.com";
 
        new Thread(){
             public void run(){
