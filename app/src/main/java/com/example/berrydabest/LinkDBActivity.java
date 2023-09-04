@@ -10,7 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 //display the result in form of JSON from MainActivity2.java
-public class SuccessActivity extends AppCompatActivity {
+public class LinkDBActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

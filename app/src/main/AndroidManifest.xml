@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BerryDaBest">
         <activity
-            android:name=".SuccessActivity"
+            android:name=".LinkDBActivity"
             android:exported="false" />
         <activity
             android:name=".CreateEvent"
@@ -32,13 +32,6 @@
             android:name=".EventAnalytic"
             android:exported="true"/>
 
-
-
-
-
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" />
 
     </application>
 

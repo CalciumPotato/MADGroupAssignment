@@ -1,13 +1,11 @@
 package com.example.berrydabest;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -36,7 +34,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.Random;
 
 
@@ -234,7 +231,7 @@ public class CreateEvent extends AppCompatActivity {
                     //OK response code
                     //result:response come from web server
                     Log.i("MainActivity2","Response: "+result);
-                    Intent intent = new Intent(CreateEvent.this,SuccessActivity.class);
+                    Intent intent = new Intent(CreateEvent.this, LinkDBActivity.class);
                     intent.putExtra("response",result);
                     startActivity(intent);
 
