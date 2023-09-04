@@ -3,6 +3,11 @@
     package="com.example.berrydabest">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,13 +18,53 @@
         <activity
             android:name=".MyEvent"
             android:exported="true" />
-
         <activity
             android:name=".MainPage"
             android:exported="false" />
         <activity
             android:name=".EventDetail"
             android:exported="false" />
+        <activity
+            android:name=".LinkDBActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateEvent"
+            android:exported="false" />
+        <activity
+            android:name=".SuccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity_EditProfile"
+            android:exported="false" />
+        <activity
+            android:name=".Activity_Profile"
+            android:exported="false" />
+      <activity
+            android:name=".QR_Generator"
+            android:exported="false" />
+        <activity
+            android:name=".QR_Scan"
+            android:exported="false" />
+        <activity
+            android:name=".SignIn"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".EventAnalytic"
+            android:exported="true"/>
+
+        <activity
+            android:name=".SignUp"
+            android:exported="false" />
+
     </application>
 
 </manifest>
