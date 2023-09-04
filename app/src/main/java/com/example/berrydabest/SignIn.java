@@ -85,7 +85,7 @@ public class SignIn extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
-        Intent intent = new Intent(this, Activity_Profile.class);
+        Intent intent = new Intent(this, EventAnalytic.class);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

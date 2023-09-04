@@ -134,7 +134,7 @@
                     android:contentDescription="Clickable Image"
                     android:onClick="onImageClick"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/event"
+                    android:src="@drawable/eventqr"
                     tools:ignore="OnClick" />
 
                 <TextView

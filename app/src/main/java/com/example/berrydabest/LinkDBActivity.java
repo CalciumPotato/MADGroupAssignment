@@ -1,9 +1,11 @@
 package com.example.berrydabest;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +17,7 @@ public class LinkDBActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_success);
+        setContentView(R.layout.linik_db);
 
         Intent intent = getIntent();
         TextView tv = new TextView(this);
