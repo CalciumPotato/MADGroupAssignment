@@ -41,6 +41,7 @@ public class MainPage extends AppCompatActivity {
         setContentView(R.layout.activity_main_page);
 
         Handler handler = new Handler();
+
         String email = readPreference(this, "Email", "notFound");
         BottomNavigationView navigationView = findViewById(R.id.navigation);
 

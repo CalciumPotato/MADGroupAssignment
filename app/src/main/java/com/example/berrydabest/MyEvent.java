@@ -42,6 +42,7 @@ public class MyEvent extends AppCompatActivity {
         setContentView(R.layout.activity_my_event);
 
         Handler handler = new Handler();
+
         String email = readPreference(this, "Email", "notFound");
 
         LinearLayout ll = findViewById(R.id.eventLayout);

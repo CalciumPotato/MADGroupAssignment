@@ -38,6 +38,7 @@ public class EventDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
         String eventName = this.getIntent().getStringExtra("EventName");
+
         String email = readPreference(this, "Email", "notFound");
 
         // back button
@@ -48,6 +49,7 @@ public class EventDetail extends AppCompatActivity {
                 finish();
             }
         });
+
 
         Handler handler = new Handler();
 
