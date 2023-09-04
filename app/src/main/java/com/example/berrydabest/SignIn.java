@@ -49,7 +49,7 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_in);
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         if(doesSharedPreferencesExist(this,"Secret") == true || acct != null){
             showMessage("Auto LogIn");
