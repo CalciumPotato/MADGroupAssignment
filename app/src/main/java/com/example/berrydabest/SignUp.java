@@ -78,7 +78,7 @@ public class SignUp extends AppCompatActivity {
         });
 
 
-        Intent back_intent = new Intent(this, MainActivity.class);
+        Intent back_intent = new Intent(this, SignIn.class);
         ImageView back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +163,7 @@ public class SignUp extends AppCompatActivity {
                     mHandler.post(new Runnable() {
                         public void run() {
                             showMessage("                  Congratulation !"+"\nAccount has been created successfully !");
-                            Intent back_intent = new Intent(SignUp.this, MainActivity.class);
+                            Intent back_intent = new Intent(SignUp.this, SignIn.class);
                             startActivity(back_intent);
                             overridePendingTransition(R.anim.left1, R.anim.right1);
                         }

@@ -39,7 +39,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class SignIn extends AppCompatActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
     Handler eHandler = new Handler();
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
-        Intent intent = new Intent(this, SignUp.class);
+        Intent intent = new Intent(this, QR_Scan.class);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,8 +171,8 @@ public class MainActivity extends AppCompatActivity {
 
                             public void run() {
                                 showMessage("Success!");
-                                appendPreference(MainActivity.this,"Password",password);
-                                appendPreference(MainActivity.this,"Email",email);
+                                appendPreference(SignIn.this,"Password",password);
+                                appendPreference(SignIn.this,"Email",email);
                             }
                         });
                     }
@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
                     mHandler.post(new Runnable() {
                         public void run() {
                             //Intent to next page
-                            appendPreference(MainActivity.this,"Email",email);
+                            appendPreference(SignIn.this,"Email",email);
                             showMessage("Let's Go !");
                         }
                     });
