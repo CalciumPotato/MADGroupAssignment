@@ -130,6 +130,7 @@ public class QR_Scan extends AppCompatActivity {
                 if (result.getContents() == null) {
                     // Handle a canceled scan
                     Toast.makeText(this, "Scan canceled", Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
                     // Handle the scanned data
                     String scannedData = result.getContents();
@@ -147,6 +148,7 @@ public class QR_Scan extends AppCompatActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                         showToast("Error decoding QR code");
+                        finish();
                     }
 
                 }
@@ -162,7 +164,7 @@ public class QR_Scan extends AppCompatActivity {
 
     private class QR_thread extends Thread{
         private String code;
-        private String email ="yikhengl@gmail.com";//Set to get preference from file
+        private String email =readPreference(QR_Scan.this,"Email","");//Set to get preference from file
         private String eventName;
         private Handler mHandler;
         private boolean checkEvent = false;

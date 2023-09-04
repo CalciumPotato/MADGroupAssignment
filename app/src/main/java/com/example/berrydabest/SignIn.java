@@ -179,7 +179,6 @@ public class SignIn extends AppCompatActivity {
                                 Intent intent = new Intent(SignIn.this, MainPage.class);
                                 startActivity(intent);
                                 overridePendingTransition(R.anim.right, R.anim.left);
-                                appendPreference(SignIn.this,"Email",email);
                                 finish();
                             }
                         });
