@@ -53,7 +53,10 @@ public class SignIn extends AppCompatActivity {
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         if(doesSharedPreferencesExist(this,"Secret") == true || acct != null){
             showMessage("Auto LogIn");
-            //put intent
+            Intent intent = new Intent(this, MainPage.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.right, R.anim.left);
+            finish();
             return;
         }
         TextView signup = findViewById(R.id.sign);
@@ -85,7 +88,7 @@ public class SignIn extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
-        Intent intent = new Intent(this, MyEvent.class);
+        Intent intent = new Intent(this, SignUp.class);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,6 +176,7 @@ public class SignIn extends AppCompatActivity {
                                 showMessage("Success!");
                                 appendPreference(SignIn.this,"Password",password);
                                 appendPreference(SignIn.this,"Email",email);
+                                finish();
                             }
                         });
                     }
@@ -258,18 +262,24 @@ public class SignIn extends AppCompatActivity {
                 if(hc.getResponseCode() == 201){
                     mHandler.post(new Runnable() {
                         public void run() {
-                            //Intent to next page
+                            Intent intent = new Intent(SignIn.this, MainPage.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.right, R.anim.left);
                             appendPreference(SignIn.this,"Email",email);
                             showMessage("Let's Go !");
+                            finish();
                         }
                     });
                 }
                 else if(hc.getResponseCode() == 409){
                     mHandler.post(new Runnable() {
                         public void run() {
-                            //Intent to next page
+                            Intent intent = new Intent(SignIn.this, MainPage.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.right, R.anim.left);
 
-                            showMessage(" Account is existed !");
+                            showMessage(" Welcome back !");
+                            finish();
                         }
                     });
                 }
