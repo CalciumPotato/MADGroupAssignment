@@ -1,6 +1,8 @@
 package com.example.berrydabest;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,8 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +41,31 @@ public class MainPage extends AppCompatActivity {
         setContentView(R.layout.activity_main_page);
 
         Handler handler = new Handler();
-        String email = "yikhengl@gmail.com";
+        String email = readPreference(this, "Email", "notFound");
+        BottomNavigationView navigationView = findViewById(R.id.navigation);
+
+        navigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    return true;
+                case R.id.navigation_calendar:
+                    // Handle dashboard navigation
+                    startActivity(new Intent(MainPage.this, CalendarActivity.class));
+                    return true;
+                case R.id.navigation_qrScanner:
+                    // Handle notifications navigation
+                    Intent intent = new Intent(this, QR_Scan.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right, R.anim.left);
+                    Toast.makeText(MainPage.this, "QR Scanner", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.navigation_myEvent:
+                    // Handle notifications navigation
+                    startActivity(new Intent(MainPage.this, MyEvent.class));
+                    return true;
+            }
+            return false;
+        });
 
        new Thread(){
             public void run(){
@@ -303,5 +332,11 @@ public class MainPage extends AppCompatActivity {
             e.printStackTrace();
         }
         return false;
+    }
+
+    // read email from preference file
+    public static String readPreference(Context context, String key, String defaultValue) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Secret", Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, defaultValue);
     }
 }

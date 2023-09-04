@@ -1,9 +1,12 @@
 package com.example.berrydabest;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -35,7 +38,16 @@ public class EventDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
         String eventName = this.getIntent().getStringExtra("EventName");
-        String email ="yikhengl@gmail.com";
+        String email = readPreference(this, "Email", "notFound");
+
+        // back button
+        ImageView backBtn = findViewById(R.id.img_back);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         Handler handler = new Handler();
 
@@ -214,7 +226,6 @@ public class EventDetail extends AppCompatActivity {
 
     }
 
-
     private String readStream(InputStream is) {
         try {
             ByteArrayOutputStream bo = new ByteArrayOutputStream();
@@ -227,5 +238,11 @@ public class EventDetail extends AppCompatActivity {
         } catch (IOException e) {
             return "";
         }
+    }
+
+    // read email from preference file
+    public static String readPreference(Context context, String key, String defaultValue) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Secret", Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, defaultValue);
     }
 }
