@@ -1,0 +1,18 @@
+<!-- res/anim/float_animation.xml -->
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Translation animation -->
+    <translate
+        android:fromYDelta="0.7%p"
+        android:toYDelta="-0.7%p"
+        android:duration="1000"
+        android:repeatCount="infinite"
+        android:repeatMode="reverse" />
+
+    <!-- Alpha animation -->
+    <alpha
+        android:fromAlpha="1.0"
+        android:toAlpha="0.7"
+        android:duration="1000"
+        android:repeatCount="infinite"
+        android:repeatMode="reverse" />
+</set>

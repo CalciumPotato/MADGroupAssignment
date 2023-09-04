@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">BerryDaBest</string>
+    <string name="GOOGLE_KEY">AIzaSyChJTLOuW7xpnj161ed1-uBufQJLKCBw3A</string>
+    <string name="Pref_KEY">MyAppPreferences</string>
+    <string name="SUPABASE_KEY">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxxaHJ4bWR4dHh5eWNuZnR0dGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTMyNDI3NDgsImV4cCI6MjAwODgxODc0OH0.LGJSPFmT3mSw0-V0ZnRTaPlx71Fxm2V8tjXfvrlcUy4</string>
 </resources>

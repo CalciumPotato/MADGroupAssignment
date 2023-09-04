@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/background.xml" value="0.2875" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/border.xml" value="0.2851851851851852" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/button.xml" value="0.28307692307692306" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/form_back.xml" value="0.2712962962962963" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/utar.xml" value="0.28307692307692306" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/utar_b.xml" value="0.28307692307692306" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_image.xml" value="0.2164855072463768" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_main2.xml" value="0.2246376811594203" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_qr_generate.xml" value="0.2164855072463768" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_qr_generator.xml" value="0.20742753623188406" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_qr_scan.xml" value="0.22056159420289856" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_sign.xml" value="0.23958333333333334" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_sign_up.xml" value="0.264" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.264" />
+      </ProjectState>
+    </option>
   </component>
 </project>
