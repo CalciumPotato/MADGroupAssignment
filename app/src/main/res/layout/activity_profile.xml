@@ -168,16 +168,17 @@
             </LinearLayout>
         </ScrollView>
 
-        <!--<androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@color/background_grey"
-            app:menu="@menu/bottomnav_profile" />
-            &lt;!&ndash;app:itemBackground="@color/background_grey"
+            app:itemBackground="@color/background_grey"
             app:itemIconTint="#FFFFFF"
-            app:itemTextColor="#FFFFFF"&ndash;&gt;-->
+            app:itemTextColor="#FFFFFF"
+            app:menu="@menu/bottomnav_profile" />
+
 
 
     </RelativeLayout>

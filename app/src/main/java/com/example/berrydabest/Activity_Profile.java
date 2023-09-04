@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +51,7 @@ public class Activity_Profile extends AppCompatActivity {
         btn_profile_edit = findViewById(R.id.btn_profile_edit);
         btn_profile_swap1 = findViewById(R.id.btn_profile_swap1);
         btn_profile_swap2 = findViewById(R.id.btn_profile_swap2);
-        //BottomNavigationView navigationView = findViewById(R.id.navigation);
+        BottomNavigationView navigationView = findViewById(R.id.navigation);
 
         // Get user details
         // 2.6 Create thread
@@ -99,9 +101,10 @@ public class Activity_Profile extends AppCompatActivity {
 
 
         // Bottom navigation bar
-        /*navigationView.setOnNavigationItemSelectedListener(item -> {
+        navigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+
                     Toast.makeText(Activity_Profile.this, "Home", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_calendar:
@@ -110,6 +113,9 @@ public class Activity_Profile extends AppCompatActivity {
                     return true;
                 case R.id.navigation_qrScanner:
                     // Handle notifications navigation
+                    Intent intent = new Intent(this, QR_Scan.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right, R.anim.left);
                     Toast.makeText(Activity_Profile.this, "QR Scanner", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_myEvent:
@@ -118,7 +124,7 @@ public class Activity_Profile extends AppCompatActivity {
                     return true;
             }
             return false;
-        });*/
+        });
     }
 
     // Create thread
