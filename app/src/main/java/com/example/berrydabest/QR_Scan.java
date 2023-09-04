@@ -44,7 +44,6 @@ public class QR_Scan extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_qr_scan);
 
         showAlertDialog(R.layout.activity_qr_scan);
 
@@ -69,6 +68,14 @@ public class QR_Scan extends AppCompatActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert) // Optional: Set an icon
                 .show();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Scan canceled", Toast.LENGTH_SHORT).show();
+        finish();
+        super.onBackPressed();
     }
 
     private void startQRCodeScanner() {

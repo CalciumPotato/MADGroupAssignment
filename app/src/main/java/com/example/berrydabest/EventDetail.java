@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -18,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,6 +49,30 @@ public class EventDetail extends AppCompatActivity {
             public void onClick(View view) {
                 finish();
             }
+        });
+        BottomNavigationView navigationView = findViewById(R.id.navigation);
+
+        navigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    return true;
+                case R.id.navigation_calendar:
+                    // Handle dashboard navigation
+                    startActivity(new Intent(EventDetail.this, CalendarActivity.class));
+                    return true;
+                case R.id.navigation_qrScanner:
+                    // Handle notifications navigation
+                    Intent intent = new Intent(this, QR_Scan.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right, R.anim.left);
+                    Toast.makeText(EventDetail.this, "QR Scanner", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.navigation_myEvent:
+                    // Handle notifications navigation
+                    startActivity(new Intent(EventDetail.this, MyEvent.class));
+                    return true;
+            }
+            return false;
         });
 
 

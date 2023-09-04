@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -57,8 +56,6 @@ public class MainPage extends AppCompatActivity {
                     // Handle notifications navigation
                     Intent intent = new Intent(this, QR_Scan.class);
                     startActivity(intent);
-                    overridePendingTransition(R.anim.right, R.anim.left);
-                    Toast.makeText(MainPage.this, "QR Scanner", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_myEvent:
                     // Handle notifications navigation
