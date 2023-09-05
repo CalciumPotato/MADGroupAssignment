@@ -160,10 +160,12 @@
                         android:layout_height="match_parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:id="@+id/layout_profile_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"></LinearLayout>
+
 
             </LinearLayout>
         </ScrollView>
