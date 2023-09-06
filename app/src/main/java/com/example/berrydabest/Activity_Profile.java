@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -87,6 +89,8 @@ public class Activity_Profile extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(Activity_Profile.this, "Showing upcoming events", Toast.LENGTH_SHORT).show();
                 btn_upcoming = true;
+                btn_profile_swap1.setBackgroundColor(btn_profile_swap1.getContext().getResources().getColor(R.color.btn_selected));
+                btn_profile_swap2.setBackgroundColor(btn_profile_swap2.getContext().getResources().getColor(R.color.btn_deselected));
                 // Create thread
                 MyThread connectThread = new MyThread(email, handler);
                 connectThread.start();
@@ -98,6 +102,8 @@ public class Activity_Profile extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(Activity_Profile.this, "Showing past events", Toast.LENGTH_SHORT).show();
                 btn_upcoming = false;
+                btn_profile_swap1.setBackgroundColor(btn_profile_swap1.getContext().getResources().getColor(R.color.btn_deselected));
+                btn_profile_swap2.setBackgroundColor(btn_profile_swap2.getContext().getResources().getColor(R.color.btn_selected));
                 // Create thread
                 MyThread connectThread = new MyThread(email, handler);
                 connectThread.start();
@@ -270,12 +276,16 @@ public class Activity_Profile extends AppCompatActivity {
                                                 String date = jsonObject.getString("Event_Date");
 
                                                 if(btn_upcoming == true) {
+                                                    btn_profile_swap1.setBackgroundTintList(ContextCompat.getColorStateList(Activity_Profile.this, R.color.btn_selected));
+                                                    btn_profile_swap2.setBackgroundTintList(ContextCompat.getColorStateList(Activity_Profile.this, R.color.btn_deselected));
                                                     if (Activity_Profile_Tools.CompareTwoDates(date)) {
                                                         filteredArray.put(jsonObject);
                                                         Log.i("##### DEBUG #####", "filteredArray:" + filteredArray);
                                                     }
                                                 }
                                                 else {
+                                                    btn_profile_swap1.setBackgroundTintList(ContextCompat.getColorStateList(Activity_Profile.this, R.color.btn_deselected));
+                                                    btn_profile_swap2.setBackgroundTintList(ContextCompat.getColorStateList(Activity_Profile.this, R.color.btn_selected));
                                                     if (!Activity_Profile_Tools.CompareTwoDates(date)) {
                                                         filteredArray.put(jsonObject);
                                                         Log.i("##### DEBUG #####", "filteredArray:" + filteredArray);
@@ -293,15 +303,16 @@ public class Activity_Profile extends AppCompatActivity {
 
                                                                 // Create the parent LinearLayout: event image + event details
                                                                 LinearLayout eventCard = new LinearLayout(Activity_Profile.this);
-                                                                eventCard.setLayoutParams(new LinearLayout.LayoutParams(
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                                                ));
-                                                                eventCard.setOrientation(LinearLayout.HORIZONTAL);
-                                                                eventCard.setBackgroundColor(Color.parseColor("#2e3035"));
+                                                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                                                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                                                eventCard.setOrientation(LinearLayout.VERTICAL);
+                                                                eventCard.setBackgroundColor(Color.parseColor("#3f4248"));
                                                                 eventCard.setPadding(8, 8, 8, 8);
+                                                                layoutParams.setMargins(16, 16, 16, 16);
+                                                                eventCard.setLayoutParams(layoutParams);
 
                                                                 // Create the inner LinearLayout for image
+/*
                                                                 LinearLayout eventImage = new LinearLayout(Activity_Profile.this);
                                                                 eventImage.setOrientation(LinearLayout.VERTICAL);
                                                                 eventImage.setLayoutParams(new LinearLayout.LayoutParams(
@@ -310,6 +321,7 @@ public class Activity_Profile extends AppCompatActivity {
                                                                         2  // weight
                                                                 ));
                                                                 eventImage.setPadding(8, 8, 8, 8);
+*/
 
                                                                 // Create the inner LinearLayout for text
                                                                 LinearLayout eventDetails = new LinearLayout(Activity_Profile.this);
@@ -324,10 +336,6 @@ public class Activity_Profile extends AppCompatActivity {
                                                                         1  // weight
                                                                 ));
                                                                 eventDetails.setPadding(8, 8, 8, 8);
-
-
-
-
 /*
                                                                 LinearLayout.LayoutParams inParams = Activity_Profile_Tools.formatLayout(layout, eventDetails);
                                                                 eventDetails.setLayoutParams(inParams);
@@ -359,7 +367,7 @@ public class Activity_Profile extends AppCompatActivity {
                                                                                     ));
                                                                                     img.setImageBitmap(bm);
 //                                                                                    img.setLayoutParams(imgParams);
-                                                                                    eventImage.addView(img, 0);
+                                                                                    eventCard.addView(img, 0);
                                                                                 }
                                                                             });
                                                                         }
@@ -377,6 +385,9 @@ public class Activity_Profile extends AppCompatActivity {
                                                                 ));
                                                                 event_name.setText(filteredArray.getJSONObject(k).getString("Event_Name"));
                                                                 event_name.setTextColor(Color.parseColor("#FFFFFF"));
+                                                                event_name.setTextSize(28);
+                                                                event_name.setTypeface(null, Typeface.BOLD);
+                                                                event_name.setPadding(8, 0, 8, 0);
 
                                                                 TextView event_date = new TextView(Activity_Profile.this);
                                                                 event_date.setLayoutParams(new LinearLayout.LayoutParams(
@@ -385,6 +396,7 @@ public class Activity_Profile extends AppCompatActivity {
                                                                 ));
                                                                 event_date.setText(filteredArray.getJSONObject(k).getString("Event_Date"));
                                                                 event_date.setTextColor(Color.parseColor("#FFFFFF"));
+                                                                event_date.setPadding(8, 0, 8, 0);
 
                                                                 TextView event_desc = new TextView(Activity_Profile.this);
                                                                 event_desc.setLayoutParams(new LinearLayout.LayoutParams(
@@ -393,6 +405,8 @@ public class Activity_Profile extends AppCompatActivity {
                                                                 ));
                                                                 event_desc.setText(filteredArray.getJSONObject(k).getString("Event_Description"));
                                                                 event_desc.setTextColor(Color.parseColor("#FFFFFF"));
+                                                                event_desc.setTextSize(20);
+                                                                event_desc.setPadding(8, 0, 8, 0);
 
                                                                 // Add ImageView and TextViews to the inner LinearLayout
                                                                 eventDetails.addView(event_name);
@@ -400,7 +414,7 @@ public class Activity_Profile extends AppCompatActivity {
                                                                 eventDetails.addView(event_desc);
 
                                                                 // Add the inner LinearLayout to the parent LinearLayout
-                                                                eventCard.addView(eventImage);
+                                                                //eventCard.addView(eventImage);
                                                                 eventCard.addView(eventDetails);
 
                                                                 eventCard.setOnClickListener(new View.OnClickListener() {
@@ -415,6 +429,7 @@ public class Activity_Profile extends AppCompatActivity {
 
                                                                 // Add the parent LinearLayout to this custom view
                                                                 eventContent.addView(eventCard);
+                                                                eventContent.setPadding(8, 8, 8, 8);
                                                             }
                                                         } catch (JSONException e) {
                                                             e.printStackTrace();

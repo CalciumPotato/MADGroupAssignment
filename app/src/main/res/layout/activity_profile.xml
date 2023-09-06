@@ -164,58 +164,17 @@
                     android:id="@+id/layout_profile_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="8dp" >
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/tv_profile_no_event"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="8dp"
-                        android:background="#2e3035"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:id="@+id/img_profile_content"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:padding="8dp"
-                                android:scaleType="centerCrop"
-                                tools:srcCompat="@tools:sample/avatars" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="9"
-                            android:orientation="vertical"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:id="@+id/img_profile_eventName"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="TextView" />
-
-                            <TextView
-                                android:id="@+id/img_profile_eventDate"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="TextView" />
-
-                            <TextView
-                                android:id="@+id/img_profile_eventDesc"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="TextView" />
-                        </LinearLayout>
-                    </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="#82847e"
+                        android:textSize="16dp"
+                        android:text="No events found." />
                 </LinearLayout>
 
 
