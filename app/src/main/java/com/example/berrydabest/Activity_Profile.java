@@ -14,7 +14,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -51,7 +50,7 @@ public class Activity_Profile extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         final Handler handler = new Handler();
-        String email = readPreference(this, "Email", "notFound");
+        String email = readPreference(this, "Email", "");
         Intent intent_receive = getIntent();
 
         // findViewById
@@ -89,7 +88,7 @@ public class Activity_Profile extends AppCompatActivity {
                 Toast.makeText(Activity_Profile.this, "Showing upcoming events", Toast.LENGTH_SHORT).show();
                 btn_upcoming = true;
                 // Create thread
-                Activity_Profile.MyThread connectThread = new Activity_Profile.MyThread(email, handler);
+                MyThread connectThread = new MyThread(email, handler);
                 connectThread.start();
             }
         });
@@ -100,7 +99,7 @@ public class Activity_Profile extends AppCompatActivity {
                 Toast.makeText(Activity_Profile.this, "Showing past events", Toast.LENGTH_SHORT).show();
                 btn_upcoming = false;
                 // Create thread
-                Activity_Profile.MyThread connectThread = new Activity_Profile.MyThread(email, handler);
+                MyThread connectThread = new MyThread(email, handler);
                 connectThread.start();
             }
         });
@@ -171,7 +170,7 @@ public class Activity_Profile extends AppCompatActivity {
                     // A4. Get response: User data
                     // A5. response -> JSON response
                     // getResponse(HttpURLConnection urlConnection)
-                    String jsonResponse = Activity_Profile_Tools.getResponse(urlConnection).toString();
+                    String jsonResponse = Activity_Profile_Tools.readStream(urlConnection.getInputStream());
                     Log.i("##### DEBUG #####", "API Response: " + jsonResponse);
 
                     /*BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -195,9 +194,9 @@ public class Activity_Profile extends AppCompatActivity {
                             JSONObject jsonObject = jsonArray.getJSONObject(0);
 //                            Log.i("##### DEBUG #####", "jsonObject: " + jsonObject);
 
-                            String username = jsonObject.optString("Username");
-                            String email = jsonObject.optString("Email");
-                            String phone = jsonObject.optString("Phone");
+                            String username = jsonObject.getString("Username");
+                            String email = jsonObject.getString("Email");
+                            String phone = jsonObject.getString("Phone");
 
                             // A9. Update your UI elements (e.g., TextViews) with the retrieved data
                             runOnUiThread(new Runnable() {
@@ -220,7 +219,7 @@ public class Activity_Profile extends AppCompatActivity {
                     // B4. Get response: User participation data
                     // B5. response -> JSON response
                     // getResponse(HttpURLConnection urlConnection)
-                    String jsonResponse2 = Activity_Profile_Tools.getResponse(urlConnection2).toString();
+                    String jsonResponse2 = Activity_Profile_Tools.readStream(urlConnection2.getInputStream());
                     Log.i("##### DEBUG #####", "API Response 2: " + jsonResponse2);
 
                     // B6. Parse the JSON response to extract the entire row of data
@@ -231,10 +230,11 @@ public class Activity_Profile extends AppCompatActivity {
                         if (jsonArray2.length() > 0) {
 
                             // B8. jsonArray[i]
+                            JSONArray filteredArray = new JSONArray();
                             for (int i = 0; i < jsonArray2.length(); i++) {
                                 JSONObject jsonObject2 = jsonArray2.getJSONObject(i);
 
-                                String eventID = jsonObject2.optString("Event_Id");
+                                String eventID = jsonObject2.getString("Event_Id");
 
                                 // connectSupabaseEvent(String email, String eventID, String apiKey, String Authorization)
                                 urlConnection3 = Activity_Profile_Tools.connectSupabaseEvent(email, eventID, getString(R.string.SUPABASE_KEY), getString(R.string.SUPABASE_KEY));
@@ -245,14 +245,14 @@ public class Activity_Profile extends AppCompatActivity {
                                 // C4. Participation data
                                 if (responseCode3 == 200) {
                                     // C4. Get response: User data
-                                    InputStream input = new BufferedInputStream((urlConnection3.getInputStream()));
-                                    String result = Activity_Profile_Tools.readStream(input);
+
+                                    String result = Activity_Profile_Tools.readStream(urlConnection3.getInputStream());
                                     Log.i("##### DEBUG #####", "result: " + result);
 
                                     // C5. Process returned data
                                     try {
                                         JSONArray jsonArray3 = new JSONArray(result);
-                                        JSONArray filteredArray = new JSONArray();
+
 
                                         if (jsonArray3.length() > 0) {
 
@@ -287,7 +287,7 @@ public class Activity_Profile extends AppCompatActivity {
                                                     public void run() {
                                                         try {
 
-                                                            for(int j = 0; j < filteredArray.length(); j++){
+                                                            for(int k = 0; k < filteredArray.length(); k++){
                                                                 //LinearLayout layout = new LinearLayout(Activity_Profile.this);
 //                                                                LinearLayout eventDetails = new LinearLayout(Activity_Profile.this);
 
@@ -333,14 +333,13 @@ public class Activity_Profile extends AppCompatActivity {
                                                                 eventDetails.setLayoutParams(inParams);
 */
 
-                                                                String eventName = filteredArray.getJSONObject(j).getString("Event_Name");
+                                                                String eventName = filteredArray.getJSONObject(k).getString("Event_Name");
                                                                 new Thread(){
                                                                     public void run(){
                                                                         try{
                                                                             // Get event image
                                                                             URL url = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/image/"+eventName+".jpg");
-                                                                            HttpURLConnection hc = null;
-                                                                            hc = (HttpURLConnection) url.openConnection();
+                                                                            HttpURLConnection hc = (HttpURLConnection) url.openConnection();
                                                                             hc.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
                                                                             hc.setRequestProperty("Content-Type", "image/jpeg");
                                                                             InputStream input = new BufferedInputStream((hc.getInputStream()));
@@ -376,7 +375,7 @@ public class Activity_Profile extends AppCompatActivity {
                                                                         LinearLayout.LayoutParams.MATCH_PARENT,
                                                                         LinearLayout.LayoutParams.WRAP_CONTENT
                                                                 ));
-                                                                event_name.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
+                                                                event_name.setText(filteredArray.getJSONObject(k).getString("Event_Name"));
                                                                 event_name.setTextColor(Color.parseColor("#FFFFFF"));
 
                                                                 TextView event_date = new TextView(Activity_Profile.this);
@@ -384,7 +383,7 @@ public class Activity_Profile extends AppCompatActivity {
                                                                         LinearLayout.LayoutParams.MATCH_PARENT,
                                                                         LinearLayout.LayoutParams.WRAP_CONTENT
                                                                 ));
-                                                                event_date.setText(filteredArray.getJSONObject(j).getString("Event_Date"));
+                                                                event_date.setText(filteredArray.getJSONObject(k).getString("Event_Date"));
                                                                 event_date.setTextColor(Color.parseColor("#FFFFFF"));
 
                                                                 TextView event_desc = new TextView(Activity_Profile.this);
@@ -392,7 +391,7 @@ public class Activity_Profile extends AppCompatActivity {
                                                                         LinearLayout.LayoutParams.MATCH_PARENT,
                                                                         LinearLayout.LayoutParams.WRAP_CONTENT
                                                                 ));
-                                                                event_desc.setText(filteredArray.getJSONObject(j).getString("Event_Description"));
+                                                                event_desc.setText(filteredArray.getJSONObject(k).getString("Event_Description"));
                                                                 event_desc.setTextColor(Color.parseColor("#FFFFFF"));
 
                                                                 // Add ImageView and TextViews to the inner LinearLayout

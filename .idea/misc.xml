@@ -3,30 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/behju/AndroidStudioAssignment/GroupAssignment/app/src/main/res/layout/activity_profile.xml" value="0.29257246376811596" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/background.xml" value="0.2875" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/border.xml" value="0.2851851851851852" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/button.xml" value="0.28307692307692306" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/form_back.xml" value="0.2712962962962963" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/utar.xml" value="0.28307692307692306" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/drawable/utar_b.xml" value="0.28307692307692306" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_create_event.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_edit_profile.xml" value="0.14427083333333332" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_event_analytic.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_event_detail.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_image.xml" value="0.2164855072463768" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_main.xml" value="0.264" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_main2.xml" value="0.2246376811594203" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_main_page.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_my_event.xml" value="0.27447916666666666" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_profile.xml" value="0.1" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_qr_generate.xml" value="0.2164855072463768" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_qr_generator.xml" value="0.20742753623188406" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_qr_scan.xml" value="0.22056159420289856" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_sign.xml" value="0.23958333333333334" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_sign_in.xml" value="0.18795289855072464" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_sign_up.xml" value="0.264" />
-        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_success.xml" value="0.18795289855072464" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2703125" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/drawable/border.xml" value="0.2703125" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/layout/activity_calendar.xml" value="0.19021739130434784" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/layout/activity_create_event.xml" value="0.19021739130434784" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/layout/activity_edit_profile.xml" value="0.19021739130434784" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/layout/activity_event_analytic.xml" value="0.19021739130434784" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/layout/activity_event_detail.xml" value="0.2078804347826087" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/layout/activity_main.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/layout/activity_main_page.xml" value="0.2" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/layout/activity_my_event.xml" value="0.2" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/layout/activity_profile.xml" value="0.19021739130434784" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/menu/bottomnav_profile.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Hp/Desktop/Y3S1/MobileAppDevelopment/MADGroupAssignment/app/src/main/res/menu/menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_edit_profile.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/yikhe/Documents/GitHub/MADGroupAssignment/app/src/main/res/layout/activity_profile.xml" value="0.264" />
       </map>
     </option>
   </component>
@@ -35,12 +26,5 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
-  </component>
-  <component name="VisualizationToolProject">
-    <option name="state">
-      <ProjectState>
-        <option name="scale" value="0.264" />
-      </ProjectState>
-    </option>
   </component>
 </project>
