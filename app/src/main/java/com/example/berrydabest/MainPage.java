@@ -47,6 +47,7 @@ public class MainPage extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+                    startActivity(new Intent(MainPage.this, Activity_Profile.class));
                     return true;
                 case R.id.navigation_calendar:
                     // Handle dashboard navigation

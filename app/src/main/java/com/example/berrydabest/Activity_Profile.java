@@ -1,16 +1,20 @@
 package com.example.berrydabest;
 
+/*
+* Note:
+* Some code of this Activity Activity_Profile are refactored to Activity_Profile_Tools to improve code readability and possibly code reuse.
+* */
+
 import static com.example.berrydabest.Activity_Profile_Tools.readPreference;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,8 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,15 +32,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Activity_Profile extends AppCompatActivity {
+
+    private LinearLayout eventContent;
+    private TextView tv_profile_username, tv_profile_userID;
+    private Button btn_profile_edit, btn_profile_swap1, btn_profile_swap2;
+    private BottomNavigationView navigationView;
+    private Boolean btn_upcoming = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,31 +55,18 @@ public class Activity_Profile extends AppCompatActivity {
         Intent intent_receive = getIntent();
 
         // findViewById
-        Button btn_profile_swap1 = findViewById(R.id.btn_profile_swap1);
-        LinearLayout ll = findViewById(R.id.layout_profile_content);
-        TextView tv_profile_username = findViewById(R.id.tv_profile_username);
-        TextView tv_profile_userID = findViewById(R.id.tv_profile_email);
-        Button btn_profile_edit = findViewById(R.id.btn_profile_edit);
-        Button btn_profile_swap2 = findViewById(R.id.btn_profile_swap2);
-        BottomNavigationView navigationView = findViewById(R.id.navigation);
+        btn_profile_swap1 = findViewById(R.id.btn_profile_swap1);
+        tv_profile_username = findViewById(R.id.tv_profile_username);
+        tv_profile_userID = findViewById(R.id.tv_profile_email);
+        btn_profile_edit = findViewById(R.id.btn_profile_edit);
+        btn_profile_swap2 = findViewById(R.id.btn_profile_swap2);
+        eventContent = findViewById(R.id.layout_profile_content);
+        navigationView = findViewById(R.id.navigation);
 
-        // Get user details
-        // 2.6 Create thread
-/*
-        MyThread connectThread = new MyThread(et_name.getText().toString(),
-                et_ingredients.getText().toString(),
-                et_price.getText().toString(),
-                handler);
-*/
-        // Later change to dynamically retrieve user information from Preference of something
-        MyThread connectThread = new MyThread("yikhengl@gmail.com", handler);
+//        MyThread connectThread = new MyThread("yikhengl@gmail.com", handler);
+//        connectThread.start();
+        Activity_Profile.MyThread connectThread = new Activity_Profile.MyThread(email, handler);
         connectThread.start();
-
-        // Add code to check if got event. If no, show "no event" text on ConstraintView
-        // ...
-        // To check if event is upcoming or past:
-        // 1. Get event details from database where it is created by current User ID.
-        // 2. Compare the date: Bigger date = upcoming; Smaller date = past.
 
         // Listeners
         // Go to Edit Profile page
@@ -90,10 +82,26 @@ public class Activity_Profile extends AppCompatActivity {
             }
         });
 
+        // Button: Upcoming events
+        btn_profile_swap1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(Activity_Profile.this, "Showing upcoming events", Toast.LENGTH_SHORT).show();
+                btn_upcoming = true;
+                // Create thread
+                Activity_Profile.MyThread connectThread = new Activity_Profile.MyThread(email, handler);
+                connectThread.start();
+            }
+        });
+
         btn_profile_swap2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(Activity_Profile.this, "Showing past events", Toast.LENGTH_SHORT).show();
+                btn_upcoming = false;
+                // Create thread
+                Activity_Profile.MyThread connectThread = new Activity_Profile.MyThread(email, handler);
+                connectThread.start();
             }
         });
 
@@ -102,7 +110,7 @@ public class Activity_Profile extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-
+                    startActivity(new Intent(this, Activity_Profile.class));
                     Toast.makeText(Activity_Profile.this, "Home", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_calendar:
@@ -124,132 +132,7 @@ public class Activity_Profile extends AppCompatActivity {
             return false;
         });
 
-        // Button: Upcoming events
-        btn_profile_swap1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(Activity_Profile.this, "Showing upcoming events", Toast.LENGTH_SHORT).show();
-                new Thread() {
-                    public void run() {
-                        try {
-                            // Connect to database
-                            URL url = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/rest/v1/Event?select=*&Email=eq." + email);
-                            HttpURLConnection hc = (HttpURLConnection) url.openConnection();
-                            hc.setRequestProperty("apikey", getString(R.string.SUPABASE_KEY));
-                            hc.setRequestProperty("Authorization", "Bearer "+getString(R.string.SUPABASE_KEY));
-
-                            InputStream input = new BufferedInputStream((hc.getInputStream()));
-                            String result = Activity_Profile_Tools.readStream(input);
-
-                            // Parse JSON
-                            JSONArray jarray = new JSONArray(result);
-                            JSONArray filteredArray = new JSONArray();
-                            for(int i = 0; i < jarray.length(); i++){
-                                JSONObject jsonObject = jarray.getJSONObject(i);
-                                String date = jsonObject.getString("Event_Date");
-                                if(Activity_Profile_Tools.CompareTwoDates(date)){
-                                    filteredArray.put(jsonObject);
-                                }
-                            }
-
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        ll.removeAllViews();    // Clear content
-
-                                        for(int j = 0; j < filteredArray.length(); j++){
-                                            LinearLayout layout = new LinearLayout(Activity_Profile.this);
-                                            LinearLayout innerLayout = new LinearLayout(Activity_Profile.this);
-                                            LinearLayout.LayoutParams inParams = Activity_Profile_Tools.formatLayout(layout, innerLayout);
-                                            innerLayout.setLayoutParams(inParams);
-/*                                            layout.setOrientation(LinearLayout.HORIZONTAL);
-                                            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(
-                                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                                    LinearLayout.LayoutParams.MATCH_PARENT
-                                            );
-                                            linearParams.setMargins(0, 10,0,10);
-                                            layout.setPadding(20, 20, 20, 20);
-                                            layout.setLayoutParams(linearParams);
-                                            layout.setBackgroundResource(R.drawable.border);
-
-                                            LinearLayout.LayoutParams inParams = new LinearLayout.LayoutParams(
-                                                    0,
-                                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                            );
-                                            inParams.weight = 2;*/
-
-                                            String eventName = filteredArray.getJSONObject(j).getString("Event_Name");
-                                            new Thread(){
-                                                public void run(){
-                                                    try{
-                                                        URL url = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/image/"+eventName+".jpg");
-                                                        HttpURLConnection hc = null;
-                                                        hc = (HttpURLConnection) url.openConnection();
-                                                        hc.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
-                                                        hc.setRequestProperty("Content-Type", "image/jpeg");
-                                                        InputStream input = new BufferedInputStream((hc.getInputStream()));
-                                                        Bitmap bm = BitmapFactory.decodeStream(input);
-                                                        handler.post(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
-                                                                        0,
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT
-                                                                );
-                                                                imgParams.weight = 1;
-                                                                ImageView img = new ImageView(Activity_Profile.this);
-                                                                img.setImageBitmap(bm);
-                                                                img.setLayoutParams(imgParams);
-                                                                layout.addView(img, 0);
-                                                            }
-                                                        });
-                                                    }
-                                                    catch(IOException e){
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            }.start();
-
-
-                                            TextView name = new TextView(Activity_Profile.this);
-                                            name.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
-                                            name.setTextColor(Color.parseColor("#FFFFFF"));
-                                            TextView desc = new TextView(Activity_Profile.this);
-                                            desc.setText(filteredArray.getJSONObject(j).getString("Event_Venue"));
-                                            desc.setTextColor(Color.parseColor("#FFFFFF"));
-
-                                            innerLayout.addView(name);
-                                            innerLayout.addView(desc);
-                                            layout.addView(innerLayout);
-
-                                            layout.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    String eventName = ((TextView)((ViewGroup)((ViewGroup)((ViewGroup) view).getChildAt(1))).getChildAt(0)).getText().toString();
-                                                    Intent i = new Intent(Activity_Profile.this, EventAnalytic.class);
-                                                    i.putExtra("EventName", eventName);
-                                                    startActivity(i);
-                                                }
-                                            });
-
-                                            ll.addView(layout);
-                                        }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                        } catch (IOException | JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }.start();
-            }
-        });
     }
-
-
 
 
 
@@ -268,39 +151,14 @@ public class Activity_Profile extends AppCompatActivity {
             this.handler = handler;
         }
 
-/*        @Override
+        @Override
         public void run() {
             try {
-
-                // 1. Access to the Supabase URL
-                // A1.1 Table: User
-                email = "yikhengl@gmail.com";
-                String tableUrl = "https://lqhrxmdxtxyycnftttks.supabase.co/rest/v1/";
-                String tableName = "User";
-                String tableFilter = "Email=eq." + email;
-                String urlString = tableUrl + tableName + "?" + tableFilter;
-
-                // B1.1 Table: Participation
-                String tableUrl2 = "https://lqhrxmdxtxyycnftttks.supabase.co/rest/v1/";
-                String tableName2 = "Participation";
-                String tableFilter2 = "User_Email=eq." + email;
-                String urlString2 = tableUrl2 + tableName2 + "?" + tableFilter2;
-
-                URL url = new URL(urlString);
-                URL url2 = new URL(urlString2);
-
-                Log.i("##### DEBUG #####", "url: " + url.toString());
-                Log.i("##### DEBUG #####", "url 2: " + url2.toString());
-
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection2 = (HttpURLConnection) url2.openConnection();
-
-                // 2. API: Follow the format in Supabase (API Docs, Project Settings)
-                urlConnection.setRequestProperty("apiKey", getString(R.string.SUPABASE_KEY));
-                urlConnection.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
-                urlConnection2.setRequestProperty("apiKey", getString(R.string.SUPABASE_KEY));
-                urlConnection2.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
-
+                // 1. Open connection
+                // connectSupabaseUser(String email, String apiKey, String Authorization)
+                // connectSupabaseParticipation(String email, String apiKey, String Authorization)
+                urlConnection = Activity_Profile_Tools.connectSupabaseUser(email, getString(R.string.SUPABASE_KEY), getString(R.string.SUPABASE_KEY));
+                urlConnection2 = Activity_Profile_Tools.connectSupabaseParticipation(email, getString(R.string.SUPABASE_KEY), getString(R.string.SUPABASE_KEY));
 
                 // 3. Obtain the status of connection
                 int responseCode = urlConnection.getResponseCode();
@@ -309,21 +167,21 @@ public class Activity_Profile extends AppCompatActivity {
                 Log.i("##### DEBUG #####", "code 2: " + responseCode2);
 
                 // A4. User data
-                if (responseCode == 200)
-                {
+                if (responseCode == 200) {
                     // A4. Get response: User data
-                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                    String inputLine;
+                    // A5. response -> JSON response
+                    // getResponse(HttpURLConnection urlConnection)
+                    String jsonResponse = Activity_Profile_Tools.getResponse(urlConnection).toString();
+                    Log.i("##### DEBUG #####", "API Response: " + jsonResponse);
+
+                    /*BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
                     StringBuilder response = new StringBuilder();
 
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
                     }
-                    in.close();
-
-                    // A5. response -> JSON response
-                    String jsonResponse = response.toString();
-                    Log.i("##### DEBUG #####", "API Response: " + jsonResponse);
+                    in.close();*/
 
                     // A6. Parse the JSON response to extract the entire row of data
                     try {
@@ -357,6 +215,362 @@ public class Activity_Profile extends AppCompatActivity {
 
                 }
 
+                // B4. User participation data
+                if (responseCode2 == 200) {
+                    // B4. Get response: User participation data
+                    // B5. response -> JSON response
+                    // getResponse(HttpURLConnection urlConnection)
+                    String jsonResponse2 = Activity_Profile_Tools.getResponse(urlConnection2).toString();
+                    Log.i("##### DEBUG #####", "API Response 2: " + jsonResponse2);
+
+                    // B6. Parse the JSON response to extract the entire row of data
+                    try {
+                        // B7. JSON response -> JSONArray
+                        JSONArray jsonArray2 = new JSONArray(jsonResponse2);
+
+                        if (jsonArray2.length() > 0) {
+
+                            // B8. jsonArray[i]
+                            for (int i = 0; i < jsonArray2.length(); i++) {
+                                JSONObject jsonObject2 = jsonArray2.getJSONObject(i);
+
+                                String eventID = jsonObject2.optString("Event_Id");
+
+                                // connectSupabaseEvent(String email, String eventID, String apiKey, String Authorization)
+                                urlConnection3 = Activity_Profile_Tools.connectSupabaseEvent(email, eventID, getString(R.string.SUPABASE_KEY), getString(R.string.SUPABASE_KEY));
+
+                                int responseCode3 = urlConnection3.getResponseCode();
+                                Log.i("##### DEBUG #####", "code 3: " + responseCode3);
+
+                                // C4. Participation data
+                                if (responseCode3 == 200) {
+                                    // C4. Get response: User data
+                                    InputStream input = new BufferedInputStream((urlConnection3.getInputStream()));
+                                    String result = Activity_Profile_Tools.readStream(input);
+                                    Log.i("##### DEBUG #####", "result: " + result);
+
+                                    // C5. Process returned data
+                                    try {
+                                        JSONArray jsonArray3 = new JSONArray(result);
+                                        JSONArray filteredArray = new JSONArray();
+
+                                        if (jsonArray3.length() > 0) {
+
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    // Clear content
+                                                    eventContent.removeAllViews();
+                                                }
+                                            });
+
+                                            // C6. JSON response -> JSONArray
+                                            for (int j = 0; j < jsonArray3.length(); j++) {
+                                                JSONObject jsonObject = jsonArray3.getJSONObject(j);
+                                                String date = jsonObject.getString("Event_Date");
+
+                                                if(btn_upcoming == true) {
+                                                    if (Activity_Profile_Tools.CompareTwoDates(date)) {
+                                                        filteredArray.put(jsonObject);
+                                                        Log.i("##### DEBUG #####", "filteredArray:" + filteredArray);
+                                                    }
+                                                }
+                                                else {
+                                                    if (!Activity_Profile_Tools.CompareTwoDates(date)) {
+                                                        filteredArray.put(jsonObject);
+                                                        Log.i("##### DEBUG #####", "filteredArray:" + filteredArray);
+                                                    }
+                                                }
+
+                                                handler.post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        try {
+
+                                                            for(int j = 0; j < filteredArray.length(); j++){
+                                                                //LinearLayout layout = new LinearLayout(Activity_Profile.this);
+//                                                                LinearLayout eventDetails = new LinearLayout(Activity_Profile.this);
+
+                                                                // Create the parent LinearLayout: event image + event details
+                                                                LinearLayout eventCard = new LinearLayout(Activity_Profile.this);
+                                                                eventCard.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                ));
+                                                                eventCard.setOrientation(LinearLayout.HORIZONTAL);
+                                                                eventCard.setBackgroundColor(Color.parseColor("#2e3035"));
+                                                                eventCard.setPadding(8, 8, 8, 8);
+
+                                                                // Create the inner LinearLayout for image
+                                                                LinearLayout eventImage = new LinearLayout(Activity_Profile.this);
+                                                                eventImage.setOrientation(LinearLayout.VERTICAL);
+                                                                eventImage.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                        LinearLayout.LayoutParams.WRAP_CONTENT, // width
+                                                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                                        2  // weight
+                                                                ));
+                                                                eventImage.setPadding(8, 8, 8, 8);
+
+                                                                // Create the inner LinearLayout for text
+                                                                LinearLayout eventDetails = new LinearLayout(Activity_Profile.this);
+                                                                /*eventDetails.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                        LinearLayout.LayoutParams.MATCH_PARENT
+                                                                ));*/
+                                                                eventDetails.setOrientation(LinearLayout.VERTICAL);
+                                                                eventDetails.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                        LinearLayout.LayoutParams.MATCH_PARENT, // width
+                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                        1  // weight
+                                                                ));
+                                                                eventDetails.setPadding(8, 8, 8, 8);
+
+
+
+
+/*
+                                                                LinearLayout.LayoutParams inParams = Activity_Profile_Tools.formatLayout(layout, eventDetails);
+                                                                eventDetails.setLayoutParams(inParams);
+*/
+
+                                                                String eventName = filteredArray.getJSONObject(j).getString("Event_Name");
+                                                                new Thread(){
+                                                                    public void run(){
+                                                                        try{
+                                                                            // Get event image
+                                                                            URL url = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/image/"+eventName+".jpg");
+                                                                            HttpURLConnection hc = null;
+                                                                            hc = (HttpURLConnection) url.openConnection();
+                                                                            hc.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
+                                                                            hc.setRequestProperty("Content-Type", "image/jpeg");
+                                                                            InputStream input = new BufferedInputStream((hc.getInputStream()));
+                                                                            Bitmap bm = BitmapFactory.decodeStream(input);
+
+                                                                            // Add event image
+                                                                            handler.post(new Runnable() {
+                                                                                @Override
+                                                                                public void run() {
+                                                                                    ImageView img = new ImageView(Activity_Profile.this);
+                                                                                    img.setPadding(8, 8, 8, 8);
+                                                                                    img.setAdjustViewBounds(true);
+                                                                                    img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                                                                    img.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                                            LinearLayout.LayoutParams.MATCH_PARENT, // width
+                                                                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                                    ));
+                                                                                    img.setImageBitmap(bm);
+//                                                                                    img.setLayoutParams(imgParams);
+                                                                                    eventImage.addView(img, 0);
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                        catch(IOException e){
+                                                                            e.printStackTrace();
+                                                                        }
+                                                                    }
+                                                                }.start();
+
+                                                                // Add TextView
+                                                                TextView event_name = new TextView(Activity_Profile.this);
+                                                                event_name.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                ));
+                                                                event_name.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
+                                                                event_name.setTextColor(Color.parseColor("#FFFFFF"));
+
+                                                                TextView event_date = new TextView(Activity_Profile.this);
+                                                                event_date.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                ));
+                                                                event_date.setText(filteredArray.getJSONObject(j).getString("Event_Date"));
+                                                                event_date.setTextColor(Color.parseColor("#FFFFFF"));
+
+                                                                TextView event_desc = new TextView(Activity_Profile.this);
+                                                                event_desc.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                                                ));
+                                                                event_desc.setText(filteredArray.getJSONObject(j).getString("Event_Description"));
+                                                                event_desc.setTextColor(Color.parseColor("#FFFFFF"));
+
+                                                                // Add ImageView and TextViews to the inner LinearLayout
+                                                                eventDetails.addView(event_name);
+                                                                eventDetails.addView(event_date);
+                                                                eventDetails.addView(event_desc);
+
+                                                                // Add the inner LinearLayout to the parent LinearLayout
+                                                                eventCard.addView(eventImage);
+                                                                eventCard.addView(eventDetails);
+
+                                                                eventCard.setOnClickListener(new View.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(View view) {
+                                                                        String eventName = ((TextView)((ViewGroup)((ViewGroup)((ViewGroup) view).getChildAt(1))).getChildAt(0)).getText().toString();
+                                                                        Intent i = new Intent(Activity_Profile.this, EventAnalytic.class);
+                                                                        i.putExtra("EventName", eventName);
+                                                                        startActivity(i);
+                                                                    }
+                                                                });
+
+                                                                // Add the parent LinearLayout to this custom view
+                                                                eventContent.addView(eventCard);
+                                                            }
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                });
+
+                                            }
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Reused code
+
+/*            try {
+                // A4. User data
+                if (responseCode == 200) {
+                    // A4. Get response: User data
+                    InputStream input = new BufferedInputStream((hc.getInputStream()));
+                    String result = Activity_Profile_Tools.readStream(input);
+                    Log.i("##### DEBUG #####", "result: " + result);
+
+                    JSONArray jsonArray = new JSONArray(result);
+                    JSONArray filteredArray = new JSONArray();
+
+                    for(int i = 0; i < jsonArray.length(); i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String date = jsonObject.getString("Event_Date");
+
+                        if(Activity_Profile_Tools.CompareTwoDates(date)){
+                            filteredArray.put(jsonObject);
+                        }
+
+                    }*/
+
+
+/*
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ll.removeAllViews();    // Clear content
+
+                                for(int j = 0; j < filteredArray.length(); j++){
+                                    LinearLayout layout = new LinearLayout(Activity_Profile.this);
+                                    LinearLayout innerLayout = new LinearLayout(Activity_Profile.this);
+                                    LinearLayout.LayoutParams inParams = Activity_Profile_Tools.formatLayout(layout, innerLayout);
+                                    innerLayout.setLayoutParams(inParams);
+                                            layout.setOrientation(LinearLayout.HORIZONTAL);
+                                            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    LinearLayout.LayoutParams.MATCH_PARENT
+                                            );
+                                            linearParams.setMargins(0, 10,0,10);
+                                            layout.setPadding(20, 20, 20, 20);
+                                            layout.setLayoutParams(linearParams);
+                                            layout.setBackgroundResource(R.drawable.border);
+
+                                            LinearLayout.LayoutParams inParams = new LinearLayout.LayoutParams(
+                                                    0,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                                            );
+                                            inParams.weight = 2;
+
+
+                                    String eventName = filteredArray.getJSONObject(j).getString("Event_Name");
+                                    new Thread(){
+                                        public void run(){
+                                            try{
+                                                URL url = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/image/"+eventName+".jpg");
+                                                HttpURLConnection hc = null;
+                                                hc = (HttpURLConnection) url.openConnection();
+                                                hc.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
+                                                hc.setRequestProperty("Content-Type", "image/jpeg");
+                                                InputStream input = new BufferedInputStream((hc.getInputStream()));
+                                                Bitmap bm = BitmapFactory.decodeStream(input);
+                                                handler.post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
+                                                                0,
+                                                                LinearLayout.LayoutParams.MATCH_PARENT
+                                                        );
+                                                        imgParams.weight = 1;
+                                                        ImageView img = new ImageView(Activity_Profile.this);
+                                                        img.setImageBitmap(bm);
+                                                        img.setLayoutParams(imgParams);
+                                                        layout.addView(img, 0);
+                                                    }
+                                                });
+                                            }
+                                            catch(IOException e){
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }.start();
+
+
+                                    TextView name = new TextView(Activity_Profile.this);
+                                    name.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
+                                    name.setTextColor(Color.parseColor("#FFFFFF"));
+                                    TextView desc = new TextView(Activity_Profile.this);
+                                    desc.setText(filteredArray.getJSONObject(j).getString("Event_Venue"));
+                                    desc.setTextColor(Color.parseColor("#FFFFFF"));
+
+                                    innerLayout.addView(name);
+                                    innerLayout.addView(desc);
+                                    layout.addView(innerLayout);
+
+                                    layout.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            String eventName = ((TextView)((ViewGroup)((ViewGroup)((ViewGroup) view).getChildAt(1))).getChildAt(0)).getText().toString();
+                                            Intent i = new Intent(Activity_Profile.this, EventAnalytic.class);
+                                            i.putExtra("EventName", eventName);
+                                            startActivity(i);
+                                        }
+                                    });
+
+                                    ll.addView(layout);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+
+
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+
+ */
+
+
+
+
+        }
+
+/*        @Override
+        public void run() {
                 if (responseCode2 == 200)
                 {
                     // B4. Get response: User data
