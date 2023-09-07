@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -388,6 +389,8 @@ public class Activity_Profile extends AppCompatActivity {
                                                                 event_name.setTextSize(28);
                                                                 event_name.setTypeface(null, Typeface.BOLD);
                                                                 event_name.setPadding(8, 0, 8, 0);
+                                                                event_name.setMaxLines(1);
+                                                                event_name.setEllipsize(TextUtils.TruncateAt.END);
 
                                                                 TextView event_date = new TextView(Activity_Profile.this);
                                                                 event_date.setLayoutParams(new LinearLayout.LayoutParams(
@@ -405,8 +408,10 @@ public class Activity_Profile extends AppCompatActivity {
                                                                 ));
                                                                 event_desc.setText(filteredArray.getJSONObject(k).getString("Event_Description"));
                                                                 event_desc.setTextColor(Color.parseColor("#FFFFFF"));
-                                                                event_desc.setTextSize(20);
+                                                                event_desc.setTextSize(18);
                                                                 event_desc.setPadding(8, 0, 8, 0);
+                                                                event_desc.setMaxLines(4);
+                                                                event_desc.setEllipsize(TextUtils.TruncateAt.END);
 
                                                                 // Add ImageView and TextViews to the inner LinearLayout
                                                                 eventDetails.addView(event_name);
@@ -453,6 +458,16 @@ public class Activity_Profile extends AppCompatActivity {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (urlConnection2 != null) {
+                    urlConnection2.disconnect();
+                }
+                if (urlConnection3 != null) {
+                    urlConnection3.disconnect();
+                }
             }
 
             // Reused code
