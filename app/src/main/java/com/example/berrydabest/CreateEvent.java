@@ -2,14 +2,15 @@ package com.example.berrydabest;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -19,10 +20,17 @@ import android.widget.EditText;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +38,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,6 +55,10 @@ public class CreateEvent extends AppCompatActivity {
     private static String URILink;
     private static String eventDate;
     private static final int IMAGE_SELECTION_REQUEST = 1;
+    private static String EventCode;
+    private static String EventName;
+    private static String ImagePath;
+    private static final int QR_CODE_SIZE = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +67,40 @@ public class CreateEvent extends AppCompatActivity {
 
         buttonDatePicker = findViewById(R.id.datePickerButton);
         selectedDateTextView = findViewById(R.id.editTextEventDate);
+        BottomNavigationView navigationView = findViewById(R.id.navigation);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted, request it
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-            }
-
         }
+
+        // Bottom navigation bar
+        navigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+
+                    Toast.makeText(CreateEvent.this, "Home", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.navigation_calendar:
+                    // Handle dashboard navigation
+                    Toast.makeText(CreateEvent.this, "Calendar", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.navigation_qrScanner:
+                    // Handle notifications navigation
+                    Intent intent = new Intent(this, QR_Scan.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right, R.anim.left);
+                    Toast.makeText(CreateEvent.this, "QR Scanner", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.navigation_myEvent:
+                    // Handle notifications navigation
+                    Toast.makeText(CreateEvent.this, "My Event", Toast.LENGTH_SHORT).show();
+                    return true;
+            }
+            return false;
+        });
+
+    }
 
     public void showDatePickerDialog(View view) {
 
@@ -119,6 +160,7 @@ public class CreateEvent extends AppCompatActivity {
 
     Handler mHandler = new Handler();
 
+    // Submit Button
     public void onCreateEventButtonClick(View view) {
 
         EditText eventNameText = findViewById(R.id.editTextEventName);
@@ -133,22 +175,29 @@ public class CreateEvent extends AppCompatActivity {
         EditText eventFeeText = findViewById(R.id.editTextEventFees);
         String eventFee = eventFeeText.getText().toString();
 
-
-        // Check if the entered text is numeric
-//        if (isNumeric(eventFee)) {
-//
-//        } else {
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            builder.setTitle("Invalid Input");
-//            builder.setMessage("Event Fee must be a numerical value.");
-//            builder.setPositiveButton("OK", null);
-//            builder.show();
-//        }
-
         MyThread connectingThread = new MyThread(eventName, eventDate, eventVenue, eventDescription, eventFee, mHandler);
         MyThread1 connectingThread1 = new MyThread1();
+
         connectingThread.start();
         connectingThread1.start();
+
+        Random random = new Random();
+        int randomNumber = random.nextInt(99) + 1;
+
+        String eventCode = eventName + randomNumber;
+        EventCode = eventCode;
+        EventName = eventName;
+
+        String imagePath = getQRCodeImagePath(eventName +".jpeg");
+
+        MyThread2 connectingThread2 = new MyThread2(imagePath,eventName +".jpeg");
+        connectingThread2.start();
+
+
+//        Intent intent = new Intent(this, QR_Generator.class);
+//        intent.putExtra("eventName", eventName);
+//        intent.putExtra("eventCode", EventCode); // Assuming you have eventCode defined somewhere
+//        startActivity(intent);
     }
 
     // Numeric checking function
@@ -181,16 +230,6 @@ public class CreateEvent extends AppCompatActivity {
         public void run(){
             //thread to run to make connection
             try {
-                //Q2
-                //URL url = new URL("https://api.agify.io/?name=" + mName); // Q2: request web API
-
-                //HTTP.GET (return you some data)
-
-                // Q3:  uses HTTP GET method
-                // Q3: uses HTTP GET method to read a row of data from database held by Supabase   [Name:column name] [eq.:equal operator]
-                //URL url = new URL("https://qlbwvyfctodwllageigl.supabase.co/rest/v1/Students?" + "Name=eq." + mName); //will return a row of data
-
-                //Q4: use HTTP POST request method to insert data to the table in supabase
                 URL url = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/rest/v1/Event?");
                 HttpURLConnection hc = (HttpURLConnection) url.openConnection();
                 //set the api key, can retrieve the info (JSON array returned) and print out ; if dun have the api key / supabase key then cannot retrieve the data from supabase
@@ -207,7 +246,13 @@ public class CreateEvent extends AppCompatActivity {
 
                 String eventCode = mName + randomNumber;
 
-                //for HTTP POST
+                EventName = mName;
+//                // put passing variable to the functions
+//                SendingClass receivingObj = new SendingClass();
+//                PassVarInterface passVarMethod = receivingObj;
+
+//                passVarMethod.PassVar(mName, eventCode);
+
                 email = "yikhengl@gmail.com";
                 //create Json object to put data (insert based on the column name) :be careful
                 JSONObject jsonObject = new JSONObject();
@@ -233,18 +278,17 @@ public class CreateEvent extends AppCompatActivity {
                     //OK response code
                     //result:response come from web server
                     Log.i("MainActivity2","Response: "+result);
-                    Intent intent = new Intent(CreateEvent.this, LinkDBActivity.class);
-                    intent.putExtra("response",result);
-                    startActivity(intent);
+                    // Intent intent = new Intent(CreateEvent.this, LinkDBActivity.class);
+                    // intent.putExtra("response",result);
+                    // startActivity(intent);
 
                 }else if (hc.getResponseCode()==201){
-                    //Q4 after insert, can check successfully inserted or not
                     Log.i("MainActivity","You have successfully inserted an entry to Supabase.");
                 }
                 else{
                     Log.i("MainActivity","Response Code:" + hc.getResponseCode());
                 }
-                //Q4
+
                 input.close();
 
             } catch (IOException | JSONException e) {
@@ -253,6 +297,7 @@ public class CreateEvent extends AppCompatActivity {
         }
     }
 
+    // Store event images
     private class MyThread1 extends Thread {
 
         public void run() {
@@ -295,9 +340,54 @@ public class CreateEvent extends AppCompatActivity {
 
     }
 
+    // Post Qr in storage
+    public class MyThread2 extends Thread {
+        private String imageFilePath;
+        private String imageName;
+
+        public MyThread2(String imageFilePath,String imageName) {
+            this.imageFilePath = imageFilePath;
+            this.imageName=imageName;
+        }
+
+        public void run() {
+            try {
+                generateQRCode(EventCode);
+
+                // URL to the Supabase Storage endpoint for uploading objects
+                URL url = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/QR/"+imageName);
+
+                // Open a connection to the URL
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+
+                // Set the required authorization header
+                connection.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
+                connection.setRequestProperty("Content-Type", "image/jpeg");
+
+                // Create the request body with the image data
+                OutputStream outputStream = connection.getOutputStream();
+                byte[] imageData = readImageFile(imageFilePath);
+
+                // Write the image data to the request's output stream
+                OutputStream os = connection.getOutputStream();
+                os.write(imageData);
+                os.close();
+
+                // Handle the response code to check if the upload was successful
+                if (connection.getResponseCode() == 200) {
+                    Log.i("MainActivity","You have successfully images an QR to Supabase.");
+
+                } else {
+                    Log.i("MainActivity","NO QR!" + connection.getResponseCode());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
 
-
+    }
 
     private String readStream(InputStream is) {
         try {
@@ -331,14 +421,17 @@ public class CreateEvent extends AppCompatActivity {
             fileInputStream = new FileInputStream(file);
             imageData = new byte[(int) file.length()];
             fileInputStream.read(imageData);
+            Log.i("MainActivity","Yes!");
         } finally {
             if (fileInputStream != null) {
                 fileInputStream.close();
+                Log.i("MainActivity","No!");
             }
         }
 
         return imageData;
     }
+
 
     private String getFilenameFromURI(Uri contentUri) {
         String[] projection = {MediaStore.Images.Media.DATA};
@@ -355,6 +448,74 @@ public class CreateEvent extends AppCompatActivity {
 
         return filePath;
     }
+
+    // QR
+
+    public void generateQRCode(String data) {
+        try {
+            // Encode the data into a QR Code
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(data, BarcodeFormat.QR_CODE, QR_CODE_SIZE, QR_CODE_SIZE);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+
+            // Fill the QR code bitmap with black and white pixels
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+            saveBitmapToStorage(bmp);
+            Log.i("MainActivity", "QR code generated successfully");
+
+        } catch (WriterException e) {
+            e.printStackTrace();
+            Log.e("MainActivity", "Error generating QR code: " + e.getMessage());
+        }
+    }
+
+    public void saveBitmapToStorage(Bitmap bitmap) {
+        String filename = EventName +".jpeg"; // Choose a filename and extension
+        try {
+            // Open a FileOutputStream to save the bitmap
+            FileOutputStream stream = this.openFileOutput(filename, Context.MODE_PRIVATE);
+
+            // Compress the bitmap to PNG format
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+            // Close the stream to complete the save operation
+            stream.close();
+            Log.i("MainActivity", "QR code image saved");
+            // Inform the user that the image has been saved
+            // Toast.makeText(this, "QR code image saved", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("MainActivity", "Error saving QR code image: " + e.getMessage());
+        }
+    }
+
+    public String getQRCodeImagePath(String filename) {
+        File file = new File(getFilesDir(), filename);
+        return file.getAbsolutePath();
+    }
+
+
+
+
+
+    public interface PassVarInterface {
+        void PassVar(String mName, String eventCode);
+    }
+
+//    public class SendingClass implements PassVarInterface {
+//
+//            public void PassVar (String mName, String eventCode){
+//                QR_Generator.ReceivingClass receivingObj = new QR_Generator.ReceivingClass();
+//                receivingObj.Name(mName);
+//                receivingObj.Code(eventCode);
+//
+//        }
+//    }
 
 }
 

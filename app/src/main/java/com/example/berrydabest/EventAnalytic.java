@@ -3,13 +3,12 @@ package com.example.berrydabest;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.os.Handler;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,6 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +32,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +51,35 @@ public class EventAnalytic extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_analytic);
         final Handler handler = new Handler();
+        String email = "yikhengl@gmail.com";
 
+        BottomNavigationView navigationView = findViewById(R.id.navigation);
+        navigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    Toast.makeText(EventAnalytic.this, "Home", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.navigation_calendar:
+                    // Handle dashboard navigation
+                    Toast.makeText(EventAnalytic.this, "Calendar", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.navigation_qrScanner:
+                    // Handle notifications navigation
+                    Intent intent = new Intent(this, QR_Scan.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right, R.anim.left);
+                    Toast.makeText(EventAnalytic.this, "QR Scanner", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.navigation_myEvent:
+                    // Handle notifications navigation
+                    Toast.makeText(EventAnalytic.this, "My Event", Toast.LENGTH_SHORT).show();
+                    return true;
+            }
+            return false;
+        });
+
+        ShowImage imageThread = new ShowImage("yikhengl@gmail.com", handler);
+        imageThread.start();
 
         ImageView participantListImageView = findViewById(R.id.ParticipantList);
         participantListImageView.setOnClickListener(new View.OnClickListener() {
@@ -59,29 +93,116 @@ public class EventAnalytic extends AppCompatActivity {
             }
         });
 
-        ImageView ExportCSV = findViewById(R.id.ExportCSV);
-        ExportCSV.setOnClickListener(new View.OnClickListener() {
+        ImageView AttendanceQR = findViewById(R.id.AttendanceQR);
+        AttendanceQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Code to execute when the ImageView is clicked
                 // For example, you can start a new activity or show a dialog
                 // Example: Starting a new activity
-                if (ContextCompat.checkSelfPermission(EventAnalytic.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    // Permission is granted, proceed with other initialization or your thread
-                    MyThread2 connectThread = new MyThread2("yikhengl@gmail.com", handler);
-                    connectThread.start();
-
-                } else {
-                    // Permission is not granted, request it
-                    ActivityCompat.requestPermissions(EventAnalytic.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_STORAGE);
-                }
-
-
-
+                DisplayQR connectThread = new DisplayQR("yikhengl@gmail.com", handler);
+                connectThread.start();
             }
+
         });
 
+        //        ImageView ExportCSV = findViewById(R.id.ExportCSV);
+//        ExportCSV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Code to execute when the ImageView is clicked
+//                // For example, you can start a new activity or show a dialog
+//                // Example: Starting a new activity
+//                if (ContextCompat.checkSelfPermission(EventAnalytic.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//                    // Permission is granted, proceed with other initialization or your thread
+//                    MyThread2 connectThread = new MyThread2("yikhengl@gmail.com", handler);
+//                    connectThread.start();
+//
+//                } else {
+//                    // Permission is not granted, request it
+//                    ActivityCompat.requestPermissions(EventAnalytic.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_STORAGE);
+//                }
+//
+//
+//
+//            }
+//        });
     }
+
+
+
+    private class DisplayQR extends Thread {
+
+        private String email;
+        private String username, phone;
+        private Handler handler;
+
+        HttpURLConnection urlConnection = null;
+
+        // 2.3 Constructor
+        public DisplayQR(String email, Handler handler) {
+            this.email = email;
+            this.handler = handler;
+        }
+
+        @Override
+        public void run() {
+            try {
+
+                String eventString = "2222";
+                String encodedEventString = eventString.replace(" ", "%20");
+                // 1. Access to the Supabase URL
+                email = "yikhengl@gmail.com";
+                String urlString = "https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/QR/"+ eventString +".jpeg";
+
+                URL url = new URL(urlString);
+
+                Log.i("##### DEBUG #####", "url: " + url.toString());
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                // 2. API: Follow the format in Supabase (API Docs, Project Settings)
+                urlConnection.setRequestProperty("apiKey", getString(R.string.SUPABASE_KEY));
+                urlConnection.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
+
+
+                // 3. Obtain the status of connection
+                int responseCode = urlConnection.getResponseCode();
+                Log.i("##### DEBUG #####", "code: " + responseCode);
+
+                if (responseCode == 200) {
+                    InputStream inputStream = urlConnection.getInputStream();
+
+                    // Create a file to save the image locally
+                    String fileName = eventString + ".jpg";
+                    File imageFile = new File(getFilesDir(), fileName);
+
+                    FileOutputStream outputStream = new FileOutputStream(imageFile);
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                    outputStream.close();
+                    inputStream.close();
+
+                    // Pass the image file path to the next activity using an intent
+                    Intent intent = new Intent(EventAnalytic.this, DisplayQRCode.class);
+                    intent.putExtra("imagePath", imageFile.getAbsolutePath());
+                    startActivity(intent);
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+        }
+    }
+
 
     private class MyThread extends Thread {
 
@@ -184,19 +305,6 @@ public class EventAnalytic extends AppCompatActivity {
 
                         Log.d("Alert", "Before AlertDialog creation");
                         // Show the AlertDialog on the main UI thread
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                AlertDialog alertDialog = builder.create();
-                                alertDialog.show();
-                                alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialogInterface) {
-                                        Log.d("Alert", "AlertDialog dismissed");
-                                    }
-                                });
-                            }
-                        });
                         Log.d("Alert", "After AlertDialog creation");
 
                     } catch (JSONException e) {
@@ -217,6 +325,96 @@ public class EventAnalytic extends AppCompatActivity {
     }
 
 
+    private class ShowImage extends Thread {
+
+        private String email;
+        private String username, phone;
+        private Handler handler;
+
+        HttpURLConnection urlConnection = null;
+
+        // 2.3 Constructor
+        public ShowImage(String email, Handler handler) {
+            this.email = email;
+            this.handler = handler;
+        }
+
+        @Override
+        public void run() {
+            try {
+
+                String eventString = "Mooncake Festival";
+                String encodedEventString = eventString.replace(" ", "%20");
+                // 1. Access to the Supabase URL
+                email = "yikhengl@gmail.com";
+                String urlString = "https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/image/"+eventString+".jpg";
+                URL url = new URL(urlString);
+
+                Log.i("##### DEBUG #####", "url: " + url.toString());
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestProperty("apiKey", getString(R.string.SUPABASE_KEY));
+                urlConnection.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
+
+
+                // 3. Obtain the status of connection
+                int responseCode = urlConnection.getResponseCode();
+                Log.i("##### DEBUG #####", "code: " + responseCode);
+
+                if (responseCode == 200) {
+                    InputStream inputStream = urlConnection.getInputStream();
+
+                    // Create a file to save the image locally
+                    String fileName = eventString + ".jpg";
+                    File imageFile = new File(getFilesDir(), fileName);
+
+                    FileOutputStream outputStream = new FileOutputStream(imageFile);
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                    outputStream.close();
+                    inputStream.close();
+
+                    ImageView EventPic = findViewById(R.id.Image1);
+
+                    if (imageFile.exists()) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                EventPic.setImageBitmap(bitmap);
+                            }
+                        });
+                    }
+
+
+
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    // csv file function
     private class MyThread2 extends Thread {
 
         private String email;
