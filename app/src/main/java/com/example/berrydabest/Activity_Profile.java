@@ -54,13 +54,12 @@ public class Activity_Profile extends AppCompatActivity {
 
         final Handler handler = new Handler();
         String email = readPreference(this, "Email", "");
-        Intent intent_receive = getIntent();
 
         // findViewById
-        btn_profile_swap1 = findViewById(R.id.btn_profile_swap1);
         tv_profile_username = findViewById(R.id.tv_profile_username);
         tv_profile_userID = findViewById(R.id.tv_profile_email);
         btn_profile_edit = findViewById(R.id.btn_profile_edit);
+        btn_profile_swap1 = findViewById(R.id.btn_profile_swap1);
         btn_profile_swap2 = findViewById(R.id.btn_profile_swap2);
         eventContent = findViewById(R.id.layout_profile_content);
         navigationView = findViewById(R.id.navigation);
@@ -77,6 +76,8 @@ public class Activity_Profile extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     Intent k = new Intent(Activity_Profile.this, Activity_EditProfile.class);
+                    k.putExtra("Email", email);
+                    Log.i("##### DEBUG #####", "email: " + email);
                     startActivity(k);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -145,8 +146,8 @@ public class Activity_Profile extends AppCompatActivity {
     // Create thread
     private class MyThread extends Thread {
 
-        private String email;
-        private String username, phone;
+        String email;
+        String username, phone;
         private Handler handler;
 
         HttpURLConnection urlConnection = null, urlConnection2 = null, urlConnection3 = null;
@@ -180,15 +181,6 @@ public class Activity_Profile extends AppCompatActivity {
                     String jsonResponse = Activity_Profile_Tools.readStream(urlConnection.getInputStream());
                     Log.i("##### DEBUG #####", "API Response: " + jsonResponse);
 
-                    /*BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-
-                    StringBuilder response = new StringBuilder();
-
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();*/
-
                     // A6. Parse the JSON response to extract the entire row of data
                     try {
                         // A7. JSON response -> JSONArray
@@ -201,9 +193,9 @@ public class Activity_Profile extends AppCompatActivity {
                             JSONObject jsonObject = jsonArray.getJSONObject(0);
 //                            Log.i("##### DEBUG #####", "jsonObject: " + jsonObject);
 
-                            String username = jsonObject.getString("Username");
-                            String email = jsonObject.getString("Email");
-                            String phone = jsonObject.getString("Phone");
+                            username = jsonObject.getString("Username");
+                            email = jsonObject.getString("Email");
+                            phone = jsonObject.getString("Phone");
 
                             // A9. Update your UI elements (e.g., TextViews) with the retrieved data
                             runOnUiThread(new Runnable() {
@@ -299,8 +291,6 @@ public class Activity_Profile extends AppCompatActivity {
                                                         try {
 
                                                             for(int k = 0; k < filteredArray.length(); k++){
-                                                                //LinearLayout layout = new LinearLayout(Activity_Profile.this);
-//                                                                LinearLayout eventDetails = new LinearLayout(Activity_Profile.this);
 
                                                                 // Create the parent LinearLayout: event image + event details
                                                                 LinearLayout eventCard = new LinearLayout(Activity_Profile.this);
@@ -312,24 +302,8 @@ public class Activity_Profile extends AppCompatActivity {
                                                                 layoutParams.setMargins(16, 16, 16, 16);
                                                                 eventCard.setLayoutParams(layoutParams);
 
-                                                                // Create the inner LinearLayout for image
-/*
-                                                                LinearLayout eventImage = new LinearLayout(Activity_Profile.this);
-                                                                eventImage.setOrientation(LinearLayout.VERTICAL);
-                                                                eventImage.setLayoutParams(new LinearLayout.LayoutParams(
-                                                                        LinearLayout.LayoutParams.WRAP_CONTENT, // width
-                                                                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                                                                        2  // weight
-                                                                ));
-                                                                eventImage.setPadding(8, 8, 8, 8);
-*/
-
                                                                 // Create the inner LinearLayout for text
                                                                 LinearLayout eventDetails = new LinearLayout(Activity_Profile.this);
-                                                                /*eventDetails.setLayoutParams(new LinearLayout.LayoutParams(
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT
-                                                                ));*/
                                                                 eventDetails.setOrientation(LinearLayout.VERTICAL);
                                                                 eventDetails.setLayoutParams(new LinearLayout.LayoutParams(
                                                                         LinearLayout.LayoutParams.MATCH_PARENT, // width
@@ -337,10 +311,6 @@ public class Activity_Profile extends AppCompatActivity {
                                                                         1  // weight
                                                                 ));
                                                                 eventDetails.setPadding(8, 8, 8, 8);
-/*
-                                                                LinearLayout.LayoutParams inParams = Activity_Profile_Tools.formatLayout(layout, eventDetails);
-                                                                eventDetails.setLayoutParams(inParams);
-*/
 
                                                                 String eventName = filteredArray.getJSONObject(k).getString("Event_Name");
                                                                 new Thread(){
@@ -419,7 +389,6 @@ public class Activity_Profile extends AppCompatActivity {
                                                                 eventDetails.addView(event_desc);
 
                                                                 // Add the inner LinearLayout to the parent LinearLayout
-                                                                //eventCard.addView(eventImage);
                                                                 eventCard.addView(eventDetails);
 
                                                                 eventCard.setOnClickListener(new View.OnClickListener() {
