@@ -1,6 +1,7 @@
 package com.example.berrydabest;
 
-import android.content.Intent;
+import static com.example.berrydabest.Activity_Profile_Tools.readPreference;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,15 +13,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class Activity_EditProfile extends AppCompatActivity {
 
@@ -29,14 +30,14 @@ public class Activity_EditProfile extends AppCompatActivity {
     private Button btn_editProfile_save;
 
     final Handler handler = new Handler();
-    Intent intent_receive = getIntent();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        Log.i("##### DEBUG #####", "email: " + intent_receive.getStringExtra("email"));
+        String email = readPreference(this, "Email", "");
+        Log.i("##### DEBUG #####", "email: " + email);
 
         // findViewById
         img_back_editProfile = findViewById(R.id.img_back_editProfile);
@@ -59,7 +60,7 @@ public class Activity_EditProfile extends AppCompatActivity {
                 Toast.makeText(Activity_EditProfile.this, "Changes saved", Toast.LENGTH_SHORT).show();
 
                 // Create thread
-                MyThread connectThread = new MyThread(et_editProfile_email.getText().toString(),
+                MyThread2 connectThread = new MyThread2(et_editProfile_email.getText().toString(),
                         handler);
                 connectThread.start();
             }
@@ -67,8 +68,47 @@ public class Activity_EditProfile extends AppCompatActivity {
 
     }
 
-    // Create thread
+    // Create thread: Get user details
     private class MyThread extends Thread {
+        private String email, username, phone;
+        private Handler handler;
+
+        HttpURLConnection urlConnection = null;
+
+        // Constructor
+        public MyThread(String email, Handler handler) {
+            this.email = email;
+            this.handler = handler;
+        }
+
+        @Override
+        public void run() {
+            try {
+                urlConnection = Activity_Profile_Tools.connectSupabaseUser(email, getString(R.string.SUPABASE_KEY), getString(R.string.SUPABASE_KEY));
+
+                // 2.4 Obtain the status of connection
+                // 200: Connected
+                int responseCode = urlConnection.getResponseCode();
+                Log.i("##### DEBUG #####", "code: " + responseCode);
+
+                // 2.5.2 Read the content
+                InputStream input = urlConnection.getInputStream();
+                String returned_result = Activity_Profile_Tools.readStream(input);
+                Log.i("##### DEBUG #####", "returned result: " + returned_result);
+
+                if (responseCode == 200)
+                {
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Create thread:: Update user details in Supabase
+    private class MyThread2 extends Thread {
 
         private String email;
         private String username, phone;
@@ -78,7 +118,7 @@ public class Activity_EditProfile extends AppCompatActivity {
         HttpURLConnection urlConnection = null;
 
         // 2.3 Constructor
-        public MyThread(String email, Handler handler) {
+        public MyThread2(String email, Handler handler) {
             this.email = email;
             // Question 4
             this.username = username;
@@ -134,6 +174,37 @@ public class Activity_EditProfile extends AppCompatActivity {
 
                     String jsonResponse = response.toString();
                     Log.i("##### DEBUG #####", "API Response: " + jsonResponse);
+
+                    // Parse the JSON response to extract the entire row of data
+                    try {
+                        // JSON response -> JSONArray
+                        JSONArray jsonArray = new JSONArray(jsonResponse);
+
+                        if (jsonArray.length() > 0) {
+
+                            // jsonArray[i]
+                            // Data of row[i]:
+                            JSONObject jsonObject = jsonArray.getJSONObject(0);
+                            Log.i("##### DEBUG #####", "jsonObject: " + jsonObject);
+
+                            username = jsonObject.getString("Username");
+                            email = jsonObject.getString("Email");
+                            phone = jsonObject.getString("Phone");
+
+                            // Update your UI elements (e.g., TextViews) with the retrieved data
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    et_editProfile_name.setText(username);
+                                    et_editProfile_email.setText(email);
+                                    et_editProfile_phone.setText(phone);
+                                }
+                            });
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
 /*                    // Delete: Question 3.3
                     Intent successIntent = new Intent(Activity_EditProfile.this, SuccessActivity.class);
