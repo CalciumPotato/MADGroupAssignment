@@ -139,25 +139,4 @@ public class Activity_Profile_Tools extends AppCompatActivity {
         return response;
     }
 
-    static LinearLayout.LayoutParams formatLayout(LinearLayout layout, LinearLayout innerLayout)
-    {
-        layout.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        linearParams.setMargins(0, 10,0,10);
-        layout.setPadding(20, 20, 20, 20);
-        layout.setLayoutParams(linearParams);
-        layout.setBackgroundResource(R.drawable.border);
-
-        LinearLayout.LayoutParams inParams = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        inParams.weight = 2;
-        innerLayout.setOrientation(LinearLayout.VERTICAL);
-
-        return inParams;
-    }
 }

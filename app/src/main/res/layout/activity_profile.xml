@@ -114,6 +114,16 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <TextView
+                    android:id="@+id/tv_profile_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:text="Participated events" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -126,7 +136,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
                         android:layout_weight="1"
-                        android:backgroundTint="#42444a"
+                        android:background="@drawable/btn_profile_event_switch"
                         android:text="Upcoming"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
@@ -144,7 +154,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:layout_weight="1"
-                        android:backgroundTint="#2b2d31"
+                        android:background="@drawable/btn_profile_event_switch"
                         android:text="Past"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
