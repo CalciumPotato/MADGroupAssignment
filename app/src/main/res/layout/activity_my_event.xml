@@ -36,7 +36,6 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
@@ -66,55 +65,25 @@
                 android:textColor="#000000" />
         </LinearLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="30dp">
-
-            <LinearLayout
-                android:id="@+id/eventLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="match_parent"-->
-                <!--                    android:orientation="horizontal"-->
-                <!--                    android:padding="20dp"-->
-                <!--                    android:background="@drawable/border">-->
-
-                <!--                    <ImageView-->
-                <!--                        android:id="@+id/imageView4"-->
-                <!--                        android:layout_width="0dp"-->
-                <!--                        android:layout_height="match_parent"-->
-                <!--                        android:layout_weight="1"-->
-                <!--                        app:srcCompat="@drawable/close" />-->
-
-                <!--                    <LinearLayout-->
-                <!--                        android:layout_width="0dp"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_weight="2"-->
-                <!--                        android:orientation="vertical">-->
-
-                <!--                        <TextView-->
-                <!--                            android:id="@+id/textView10"-->
-                <!--                            android:layout_width="match_parent"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:text="Title"-->
-                <!--                            android:textColor="#FFFFFF"/>-->
-
-                <!--                        <TextView-->
-                <!--                            android:id="@+id/textView13"-->
-                <!--                            android:layout_width="match_parent"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:text="Description"-->
-                <!--                            android:textColor="#FFFFFF"/>-->
-                <!--                    </LinearLayout>-->
-                <!--                </LinearLayout>-->
-            </LinearLayout>
-        </ScrollView>
     </LinearLayout>
+
+    <ScrollView
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="30dp"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/eventLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
@@ -127,6 +96,8 @@
         app:itemTextColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottomnav_profile" />
+        app:menu="@menu/bottomnav_profile" >
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
