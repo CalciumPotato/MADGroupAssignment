@@ -46,7 +46,6 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/navigation"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
             android:background="#313338">
@@ -99,18 +98,29 @@
                         app:layout_constraintTop_toBottomOf="@+id/tv_profile_username" />
 
                     <Button
+                        android:id="@+id/btn_profile_logout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:backgroundTint="#da373c"
+                        android:text="Log out"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="@+id/btn_profile_edit"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <Button
                         android:id="@+id/btn_profile_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
                         android:backgroundTint="#5865f1"
                         android:text="Edit User Profile"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="@+id/img_profile_picture"
-                        app:layout_constraintEnd_toEndOf="parent" />
+                        app:layout_constraintEnd_toStartOf="@+id/btn_profile_logout" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -190,18 +200,6 @@
 
             </LinearLayout>
         </ScrollView>
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/background_grey"
-            app:itemBackground="@color/background_grey"
-            app:itemIconTint="#FFFFFF"
-            app:itemTextColor="#FFFFFF"
-            app:menu="@menu/bottomnav_profile" />
-
 
 
     </RelativeLayout>

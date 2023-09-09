@@ -52,6 +52,16 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <TextView
+        android:id="@+id/tv_editProfile_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <TextView
         android:id="@+id/tv_editProfile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,7 +69,7 @@
         android:layout_marginTop="32dp"
         android:text="Name:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_editProfile_email" />
 
     <EditText
         android:id="@+id/et_editProfile_name"
@@ -76,26 +86,26 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_editProfile_name" />
 
     <TextView
-        android:id="@+id/tv_editProfile_email"
+        android:id="@+id/tv_editProfile_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="E-mail address:"
+        android:text="New password:"
         app:layout_constraintStart_toStartOf="@+id/tv_editProfile_name"
         app:layout_constraintTop_toBottomOf="@+id/et_editProfile_name" />
 
     <EditText
-        android:id="@+id/et_editProfile_email"
+        android:id="@+id/et_editProfile_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="abc@mail.com"
-        android:inputType="textEmailAddress"
+        android:hint="New password"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_editProfile_email" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_editProfile_password" />
 
     <TextView
         android:id="@+id/tv_editProfile_phone"
@@ -104,7 +114,7 @@
         android:layout_marginTop="16dp"
         android:text="Phone number:"
         app:layout_constraintStart_toStartOf="@+id/tv_editProfile_name"
-        app:layout_constraintTop_toBottomOf="@+id/et_editProfile_email" />
+        app:layout_constraintTop_toBottomOf="@+id/et_editProfile_password" />
 
     <EditText
         android:id="@+id/et_editProfile_phone"
