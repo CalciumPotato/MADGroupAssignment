@@ -306,7 +306,7 @@ public class EventAnalytic extends AppCompatActivity {
                                 total++;
                                 String Name = userObject.optString("Username");
                                 String Attendance = jsonObject.optString("Attendance");
-                                if (Attendance == "TRUE"){
+                                if (Attendance == "true"){
                                     attend++;
                                 }
 
