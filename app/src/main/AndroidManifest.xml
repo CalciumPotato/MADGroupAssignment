@@ -27,20 +27,28 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".DisplayQRCode"
+            android:exported="false" />
+        <activity
             android:name=".MyEvent"
             android:exported="true" />
         <activity
             android:name=".MainPage"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".EventDetail"
-            android:exported="false" />
-        <activity
-            android:name=".LinkDBActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".CreateEvent"
-            android:exported="false" />
+            android:exported="true" />
+
         <activity
             android:name=".CalendarActivity"
             android:exported="false" />
@@ -55,7 +63,7 @@
             android:exported="false" />
         <activity
             android:name=".QR_Generator"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".QR_Scan"
             android:exported="false" />

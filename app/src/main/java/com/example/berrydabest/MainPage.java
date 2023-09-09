@@ -53,6 +53,14 @@ public class MainPage extends AppCompatActivity {
             }
         });
 
+        ImageView create = findViewById(R.id.img_create);
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainPage.this, CreateEvent.class));
+            }
+        });
+
         ImageView add = findViewById(R.id.img_create);
         /*add.setOnClickListener(new View.OnClickListener() {
             @Override
