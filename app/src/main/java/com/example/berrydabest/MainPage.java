@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -44,6 +45,33 @@ public class MainPage extends AppCompatActivity {
         String email = readPreference(this, "Email", "notFound");
         BottomNavigationView navigationView = findViewById(R.id.navigation);
 
+        ImageView setting = findViewById(R.id.img_setting);
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainPage.this, Activity_Profile.class));
+            }
+        });
+
+        ImageView add = findViewById(R.id.img_create);
+        /*add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainPage.this, CreateEvent.class));
+            }
+        });*/
+
+        // logout function
+        ImageView logout = findViewById(R.id.img_logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearPreference(MainPage.this);
+                startActivity(new Intent(MainPage.this, SignIn.class));
+                finish();
+            }
+        });
+
         navigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
@@ -66,6 +94,7 @@ public class MainPage extends AppCompatActivity {
             return false;
         });
 
+        // thread for next event
        new Thread(){
             public void run(){
                 try {
@@ -159,10 +188,14 @@ public class MainPage extends AppCompatActivity {
                                 name.setText(closest.getString("Event_Name"));
                                 name.setTextColor(Color.parseColor("#FFFFFF"));
                                 name.setTextSize(20);
+                                name.setMaxLines(1);
+                                name.setEllipsize(TextUtils.TruncateAt.END);
                                 TextView desc = new TextView(MainPage.this);
                                 desc.setText(closest.getString("Event_Description"));
                                 desc.setTextColor(Color.parseColor("#FFFFFF"));
                                 desc.setTextSize(20);
+                                desc.setMaxLines(4);
+                                desc.setEllipsize(TextUtils.TruncateAt.END);
                                 innerLayout.addView(name);
                                 innerLayout.addView(desc);
 
@@ -188,6 +221,7 @@ public class MainPage extends AppCompatActivity {
             }
         }.start();
 
+       // thread for other events
         new Thread() {
             public void run() {
                 try {
@@ -268,9 +302,13 @@ public class MainPage extends AppCompatActivity {
                                     TextView name = new TextView(MainPage.this);
                                     name.setText(filteredArray.getJSONObject(i).getString("Event_Name"));
                                     name.setTextColor(Color.parseColor("#FFFFFF"));
+                                    name.setMaxLines(1);
+                                    name.setEllipsize(TextUtils.TruncateAt.END);
                                     TextView desc = new TextView(MainPage.this);
                                     desc.setText(filteredArray.getJSONObject(i).getString("Event_Description"));
                                     desc.setTextColor(Color.parseColor("#FFFFFF"));
+                                    desc.setMaxLines(4);
+                                    desc.setEllipsize(TextUtils.TruncateAt.END);
 
                                     innerLayout.addView(name);
                                     innerLayout.addView(desc);
@@ -337,5 +375,12 @@ public class MainPage extends AppCompatActivity {
     public static String readPreference(Context context, String key, String defaultValue) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("Secret", Context.MODE_PRIVATE);
         return sharedPreferences.getString(key, defaultValue);
+    }
+
+    // function to clearPreference
+    public static void clearPreference(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Secret", Context.MODE_PRIVATE);
+        sharedPreferences.edit().clear().commit();
+        return;
     }
 }
