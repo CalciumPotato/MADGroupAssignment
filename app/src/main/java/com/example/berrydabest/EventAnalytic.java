@@ -57,6 +57,9 @@ public class EventAnalytic extends AppCompatActivity {
         final Handler handler = new Handler();
         String email = "yikhengl@gmail.com";
 
+        TextView name = findViewById(R.id.textView2);
+        name.setText(eventName);
+
         ImageView backBtn = findViewById(R.id.img_back);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +110,8 @@ public class EventAnalytic extends AppCompatActivity {
                 connectThread.start();
             }
         });
+
+
 
         ImageView AttendanceQR = findViewById(R.id.AttendanceQR);
         AttendanceQR.setOnClickListener(new View.OnClickListener() {
@@ -223,6 +228,8 @@ public class EventAnalytic extends AppCompatActivity {
         private String email;
         private String username, phone;
         private Handler handler;
+        private int total = 0;
+        private int attend = 0;
 
         HttpURLConnection urlConnection = null;
 
@@ -259,6 +266,8 @@ public class EventAnalytic extends AppCompatActivity {
                 int responseCode = urlConnection.getResponseCode();
                 Log.i("##### DEBUG #####", "code: " + responseCode);
 
+
+
                 if (responseCode == 200) {
 
                     BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -277,7 +286,6 @@ public class EventAnalytic extends AppCompatActivity {
                     try {
                         // Create an AlertDialog.Builder
                         AlertDialog.Builder builder = new AlertDialog.Builder(EventAnalytic.this);
-                        builder.setTitle("Participants");
                         JSONArray jsonArray = new JSONArray(jsonResponse);
 
 
@@ -295,9 +303,12 @@ public class EventAnalytic extends AppCompatActivity {
 
 
                             if (jsonArray.length() > 0) {
-
+                                total++;
                                 String Name = userObject.optString("Username");
                                 String Attendance = jsonObject.optString("Attendance");
+                                if (Attendance == "TRUE"){
+                                    attend++;
+                                }
 
                                 View customLayout = inflater.inflate(R.layout.participant_list, null);
                                 // Find TextViews in the custom layout
@@ -310,8 +321,15 @@ public class EventAnalytic extends AppCompatActivity {
 
                                 // Add the custom layout to the AlertDialog
                                 containerLayout.addView(customLayout);
+
+
                             }
+
+
                         }
+
+                        TextView attended = headerLayout.findViewById(R.id.AttendaceNo);
+                        attended.setText("Attendance : " + attend + " / " + total);
 
                         ScrollView scrollView = new ScrollView(EventAnalytic.this);
                         scrollView.addView(containerLayout);
