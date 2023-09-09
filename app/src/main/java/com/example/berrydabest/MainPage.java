@@ -38,6 +38,8 @@ import java.util.Date;
 
 public class MainPage extends AppCompatActivity {
 
+    private TextView nextEvent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,7 @@ public class MainPage extends AppCompatActivity {
         Handler handler = new Handler();
 
         String email = readPreference(this, "Email", "notFound");
+        nextEvent = findViewById(R.id.textView3);
         BottomNavigationView navigationView = findViewById(R.id.navigation);
 
         ImageView setting = findViewById(R.id.img_setting);
@@ -140,46 +143,20 @@ public class MainPage extends AppCompatActivity {
                             layout.setPadding(8, 8, 8, 8);
                             layoutParams.setMargins(16, 16, 16, 16);
                             layout.setLayoutParams(layoutParams);
-                            /*LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.MATCH_PARENT
-                            );*/
-                            //linearParams.setMargins(10, 10,10,10);
-                            //layout.setPadding(20, 20, 20, 20);
-                            //layout.setLayoutParams(linearParams);
-                            //layout.setBackgroundResource(R.drawable.border);
+
                             new Thread(){
                                 public void run(){
                                     try{
                                         String eventName = closest.getString("Event_Name");
-                                        URL url = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/image/"+eventName+".jpg");
-                                        HttpURLConnection hc = null;
-                                        hc = (HttpURLConnection) url.openConnection();
-                                        hc.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
-                                        hc.setRequestProperty("Content-Type", "image/jpeg");
+
+                                        // Get event image
+                                        HttpURLConnection hc = Activity_Profile_Tools.connectSupabaseImage(eventName, getString(R.string.SUPABASE_KEY));
                                         InputStream input = new BufferedInputStream((hc.getInputStream()));
                                         Bitmap bm = BitmapFactory.decodeStream(input);
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                /*LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
-                                                        0,
-                                                        LinearLayout.LayoutParams.MATCH_PARENT
-                                                );*/
-                                                //imgParams.weight = 1;
-                                                ImageView img = new ImageView(MainPage.this);
-                                                img.setPadding(8, 8, 8, 8);
-                                                img.setAdjustViewBounds(true);
-                                                img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                                                img.setLayoutParams(new LinearLayout.LayoutParams(
-                                                        LinearLayout.LayoutParams.MATCH_PARENT, // width
-                                                        350
-                                                ));
-                                                img.setImageBitmap(bm);
-                                               // img.setLayoutParams(imgParams);
-                                                layout.addView(img, 0);
-                                            }
-                                        });
+
+                                        ImageView img = Activity_Profile_Tools.createImg(MainPage.this, bm);
+                                        // Add event image
+                                        handler.post(() -> layout.addView(img, 0));
                                     }
                                     catch(IOException | JSONException e){
                                         e.printStackTrace();
@@ -187,12 +164,6 @@ public class MainPage extends AppCompatActivity {
                                 }
                             }.start();
 
-
-                           /* LinearLayout.LayoutParams inParams = new LinearLayout.LayoutParams(
-                                    0,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                            );
-                            inParams.weight = 2;*/
                             LinearLayout innerLayout = new LinearLayout(MainPage.this);
                             innerLayout.setOrientation(LinearLayout.VERTICAL);
                             innerLayout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -201,8 +172,7 @@ public class MainPage extends AppCompatActivity {
                                     1  // weight
                             ));
                             innerLayout.setPadding(8, 8, 8, 8);
-                            /*innerLayout.setOrientation(LinearLayout.VERTICAL);
-                            innerLayout.setLayoutParams(inParams);*/
+
                             try {
                                 TextView name = new TextView(MainPage.this);
                                 name.setText(closest.getString("Event_Name"));
@@ -217,31 +187,9 @@ public class MainPage extends AppCompatActivity {
                                 name.setTypeface(null, Typeface.BOLD);
                                 name.setPadding(8, 0, 8, 0);
 
-                                TextView desc = new TextView(MainPage.this);
-                                desc.setText(closest.getString("Event_Description"));
-                                desc.setTextColor(Color.parseColor("#FFFFFF"));
-                                desc.setTextSize(18);
-                                desc.setPadding(8, 0, 8, 0);
-                                desc.setMaxLines(4);
-                                desc.setEllipsize(TextUtils.TruncateAt.END);
-                                desc.setLayoutParams(new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                ));
-
-                                TextView date = new TextView(MainPage.this);
-                                date.setText(closest.getString("Event_Date"));
-                                date.setTextColor(Color.parseColor("#FFFFFF"));
-                                date.setTextSize(20);
-                                date.setLayoutParams(new LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                ));
-                                date.setPadding(8, 0, 8, 0);
+                                nextEvent.setText("Your Next Event: " + closest.getString("Event_Date"));
 
                                 innerLayout.addView(name);
-                                innerLayout.addView(date);
-                                innerLayout.addView(desc);
 
                                 layout.addView(innerLayout);
                                 layout.setOnClickListener(new View.OnClickListener() {
@@ -343,18 +291,7 @@ public class MainPage extends AppCompatActivity {
                                     ));
                                     innerLayout.setPadding(8, 8, 8, 8);
 
-                                    TextView name = new TextView(MainPage.this);
-                                    name.setText(filteredArray.getJSONObject(i).getString("Event_Name"));
-                                    name.setTextColor(Color.parseColor("#FFFFFF"));
-                                    name.setTextSize(28);
-                                    name.setMaxLines(1);
-                                    name.setEllipsize(TextUtils.TruncateAt.END);
-                                    name.setLayoutParams(new LinearLayout.LayoutParams(
-                                            LinearLayout.LayoutParams.MATCH_PARENT,
-                                            LinearLayout.LayoutParams.WRAP_CONTENT
-                                    ));
-                                    name.setTypeface(null, Typeface.BOLD);
-                                    name.setPadding(8, 0, 8, 0);
+                                    TextView name = Activity_Profile_Tools.createEventName(MainPage.this, filteredArray, i);
 
                                     TextView desc = new TextView(MainPage.this);
                                     desc.setText(filteredArray.getJSONObject(i).getString("Event_Description"));
