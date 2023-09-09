@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -226,16 +225,13 @@ public class Activity_Profile_Tools extends AppCompatActivity {
     }
 
     static ImageView createImg(Context context, Bitmap bm) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
-
         ImageView img = new ImageView(context);
         img.setPadding(8, 8, 8, 8);
         img.setAdjustViewBounds(true);
         img.setScaleType(ImageView.ScaleType.CENTER_CROP);
         img.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, // width
-                (int) (dpHeight / 2)
+                350
         ));
         img.setImageBitmap(bm);
 
