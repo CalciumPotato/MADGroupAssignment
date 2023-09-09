@@ -179,31 +179,42 @@ public class CreateEvent extends AppCompatActivity {
         EditText eventVenueText = findViewById(R.id.editTextEventVenue);
         String eventVenue = eventVenueText.getText().toString();
 
-        EditText eventDescriptionText = findViewById(R.id.editTextEventDescription);
+        EditText eventDateText = findViewById(R.id.editTextEventDescription);
+        String eventDate = eventDateText.getText().toString();
+
+        TextView eventDescriptionText = findViewById(R.id.editTextEventDate);
         String eventDescription = eventDescriptionText.getText().toString();
 
         EditText eventFeeText = findViewById(R.id.editTextEventFees);
         String eventFee = eventFeeText.getText().toString();
 
-        MyThread connectingThread = new MyThread(eventName, eventDate, eventVenue, eventDescription, eventFee, mHandler);
-        MyThread1 connectingThread1 = new MyThread1();
+        ImageView eventImage = findViewById(R.id.ImageView);
+        if (eventName.isEmpty() || eventVenue.isEmpty() || eventDescription.isEmpty() || eventFee.isEmpty() || eventDate.isEmpty() || eventImage.getDrawable() == null) {
 
-        connectingThread.start();
-        connectingThread1.start();
+            Toast.makeText(CreateEvent.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+        } else {
+            MyThread connectingThread = new MyThread(eventName, eventDate, eventVenue, eventDescription, eventFee, mHandler);
+            MyThread1 connectingThread1 = new MyThread1();
 
-        Random random = new Random();
-        int randomNumber = random.nextInt(99) + 1;
+            connectingThread.start();
+            connectingThread1.start();
 
-        String eventCode = eventName + randomNumber;
-        EventCode = eventCode;
-        EventName = eventName;
+            Random random = new Random();
+            int randomNumber = random.nextInt(99) + 1;
 
-        String imagePath = getQRCodeImagePath(eventName +".jpeg");
+            String eventCode = eventName + randomNumber;
+            EventCode = eventCode;
+            EventName = eventName;
 
-        MyThread2 connectingThread2 = new MyThread2(imagePath,eventName +".jpeg");
-        connectingThread2.start();
+            String imagePath = getQRCodeImagePath(eventName +".jpeg");
 
-        Toast.makeText(CreateEvent.this, "Event Has been created!", Toast.LENGTH_SHORT).show();
+            MyThread2 connectingThread2 = new MyThread2(imagePath,eventName +".jpeg");
+            connectingThread2.start();
+
+            Toast.makeText(CreateEvent.this, "Event Has been created!", Toast.LENGTH_SHORT).show();
+
+        }
+
 
 
 //        Intent intent = new Intent(this, QR_Generator.class);
