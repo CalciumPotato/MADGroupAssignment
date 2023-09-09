@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -104,25 +106,22 @@ public class MyEvent extends AppCompatActivity {
                                         ll.removeAllViews();
                                         for(int j = 0; j < filteredArray.length(); j++){
                                             LinearLayout layout = new LinearLayout(MyEvent.this);
-                                            layout.setOrientation(LinearLayout.HORIZONTAL);
-                                            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(
-                                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                                    LinearLayout.LayoutParams.MATCH_PARENT
-                                            );
-                                            linearParams.setMargins(0, 10,0,10);
-                                            layout.setPadding(20, 20, 20, 20);
-                                            layout.setLayoutParams(linearParams);
-                                            layout.setBackgroundResource(R.drawable.border);
+                                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                            layout.setOrientation(LinearLayout.VERTICAL);
+                                            layout.setBackgroundColor(Color.parseColor("#3f4248"));
+                                            layout.setPadding(8, 8, 8, 8);
+                                            layoutParams.setMargins(16, 16, 16, 16);
+                                            layout.setLayoutParams(layoutParams);
 
-                                            LinearLayout.LayoutParams inParams = new LinearLayout.LayoutParams(
-                                                    0,
-                                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                            );
-                                            inParams.weight = 2;
                                             LinearLayout innerLayout = new LinearLayout(MyEvent.this);
                                             innerLayout.setOrientation(LinearLayout.VERTICAL);
-                                            innerLayout.setLayoutParams(inParams);
-
+                                            innerLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT, // width
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    1  // weight
+                                            ));
+                                            innerLayout.setPadding(8, 8, 8, 8);
 
                                             String eventName = filteredArray.getJSONObject(j).getString("Event_Name");
                                             new Thread(){
@@ -138,14 +137,16 @@ public class MyEvent extends AppCompatActivity {
                                                         handler.post(new Runnable() {
                                                             @Override
                                                             public void run() {
-                                                                LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
-                                                                        0,
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT
-                                                                );
-                                                                imgParams.weight = 1;
-                                                                ImageView img = new ImageView(MyEvent.this);
+                                                                ImageView img = new ImageView( MyEvent.this);
+                                                                img.setPadding(8, 8, 8, 8);
+                                                                img.setAdjustViewBounds(true);
+                                                                img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                                                img.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                        LinearLayout.LayoutParams.MATCH_PARENT, // width
+                                                                        350
+                                                                ));
                                                                 img.setImageBitmap(bm);
-                                                                img.setLayoutParams(imgParams);
+                                                                // img.setLayoutParams(imgParams);
                                                                 layout.addView(img, 0);
                                                             }
                                                         });
@@ -156,15 +157,43 @@ public class MyEvent extends AppCompatActivity {
                                                 }
                                             }.start();
 
-
                                             TextView name = new TextView(MyEvent.this);
                                             name.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
                                             name.setTextColor(Color.parseColor("#FFFFFF"));
+                                            name.setTextSize(28);
+                                            name.setMaxLines(1);
+                                            name.setEllipsize(TextUtils.TruncateAt.END);
+                                            name.setLayoutParams(new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                                            ));
+                                            name.setTypeface(null, Typeface.BOLD);
+                                            name.setPadding(8, 0, 8, 0);
+
                                             TextView desc = new TextView(MyEvent.this);
-                                            desc.setText(filteredArray.getJSONObject(j).getString("Event_Venue"));
+                                            desc.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
                                             desc.setTextColor(Color.parseColor("#FFFFFF"));
+                                            desc.setTextSize(18);
+                                            desc.setPadding(8, 0, 8, 0);
+                                            desc.setMaxLines(4);
+                                            desc.setEllipsize(TextUtils.TruncateAt.END);
+                                            desc.setLayoutParams(new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                                            ));
+
+                                            TextView date = new TextView(MyEvent.this);
+                                            date.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
+                                            date.setTextColor(Color.parseColor("#FFFFFF"));
+                                            date.setTextSize(20);
+                                            date.setLayoutParams(new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                                            ));
+                                            date.setPadding(8, 0, 8, 0);
 
                                             innerLayout.addView(name);
+                                            innerLayout.addView(date);
                                             innerLayout.addView(desc);
                                             layout.addView(innerLayout);
 
@@ -222,24 +251,22 @@ public class MyEvent extends AppCompatActivity {
                                         ll.removeAllViews();
                                         for(int j = 0; j < filteredArray.length(); j++){
                                             LinearLayout layout = new LinearLayout(MyEvent.this);
-                                            layout.setOrientation(LinearLayout.HORIZONTAL);
-                                            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(
-                                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                                    LinearLayout.LayoutParams.MATCH_PARENT
-                                            );
-                                            linearParams.setMargins(0, 10,0,10);
-                                            layout.setPadding(20, 20, 20, 20);
-                                            layout.setLayoutParams(linearParams);
-                                            layout.setBackgroundResource(R.drawable.border);
+                                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                            layout.setOrientation(LinearLayout.VERTICAL);
+                                            layout.setBackgroundColor(Color.parseColor("#3f4248"));
+                                            layout.setPadding(8, 8, 8, 8);
+                                            layoutParams.setMargins(16, 16, 16, 16);
+                                            layout.setLayoutParams(layoutParams);
 
-                                            LinearLayout.LayoutParams inParams = new LinearLayout.LayoutParams(
-                                                    0,
-                                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                            );
-                                            inParams.weight = 2;
                                             LinearLayout innerLayout = new LinearLayout(MyEvent.this);
                                             innerLayout.setOrientation(LinearLayout.VERTICAL);
-                                            innerLayout.setLayoutParams(inParams);
+                                            innerLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT, // width
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    1  // weight
+                                            ));
+                                            innerLayout.setPadding(8, 8, 8, 8);
 
                                             String eventName = filteredArray.getJSONObject(j).getString("Event_Name");
                                             new Thread(){
@@ -255,14 +282,16 @@ public class MyEvent extends AppCompatActivity {
                                                         handler.post(new Runnable() {
                                                             @Override
                                                             public void run() {
-                                                                LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
-                                                                        0,
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT
-                                                                );
-                                                                imgParams.weight = 1;
-                                                                ImageView img = new ImageView(MyEvent.this);
+                                                                ImageView img = new ImageView( MyEvent.this);
+                                                                img.setPadding(8, 8, 8, 8);
+                                                                img.setAdjustViewBounds(true);
+                                                                img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                                                img.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                        LinearLayout.LayoutParams.MATCH_PARENT, // width
+                                                                        350
+                                                                ));
                                                                 img.setImageBitmap(bm);
-                                                                img.setLayoutParams(imgParams);
+                                                                // img.setLayoutParams(imgParams);
                                                                 layout.addView(img, 0);
                                                             }
                                                         });
@@ -277,11 +306,40 @@ public class MyEvent extends AppCompatActivity {
                                             TextView name = new TextView(MyEvent.this);
                                             name.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
                                             name.setTextColor(Color.parseColor("#FFFFFF"));
+                                            name.setTextSize(28);
+                                            name.setMaxLines(1);
+                                            name.setEllipsize(TextUtils.TruncateAt.END);
+                                            name.setLayoutParams(new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                                            ));
+                                            name.setTypeface(null, Typeface.BOLD);
+                                            name.setPadding(8, 0, 8, 0);
+
                                             TextView desc = new TextView(MyEvent.this);
-                                            desc.setText(filteredArray.getJSONObject(j).getString("Event_Venue"));
+                                            desc.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
                                             desc.setTextColor(Color.parseColor("#FFFFFF"));
+                                            desc.setTextSize(18);
+                                            desc.setPadding(8, 0, 8, 0);
+                                            desc.setMaxLines(4);
+                                            desc.setEllipsize(TextUtils.TruncateAt.END);
+                                            desc.setLayoutParams(new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                                            ));
+
+                                            TextView date = new TextView(MyEvent.this);
+                                            date.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
+                                            date.setTextColor(Color.parseColor("#FFFFFF"));
+                                            date.setTextSize(20);
+                                            date.setLayoutParams(new LinearLayout.LayoutParams(
+                                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                                            ));
+                                            date.setPadding(8, 0, 8, 0);
 
                                             innerLayout.addView(name);
+                                            innerLayout.addView(date);
                                             innerLayout.addView(desc);
                                             layout.addView(innerLayout);
 
