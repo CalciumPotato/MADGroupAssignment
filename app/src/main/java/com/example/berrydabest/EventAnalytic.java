@@ -69,7 +69,7 @@ public class EventAnalytic extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    startActivity(new Intent(EventAnalytic.this, Activity_Profile.class));
+                    startActivity(new Intent(EventAnalytic.this, MainPage.class));
                     Toast.makeText(EventAnalytic.this, "Home", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_calendar:

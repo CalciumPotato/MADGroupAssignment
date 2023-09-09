@@ -171,7 +171,7 @@ public class MyEvent extends AppCompatActivity {
                                             name.setPadding(8, 0, 8, 0);
 
                                             TextView desc = new TextView(MyEvent.this);
-                                            desc.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
+                                            desc.setText(filteredArray.getJSONObject(j).getString("Event_Description"));
                                             desc.setTextColor(Color.parseColor("#FFFFFF"));
                                             desc.setTextSize(18);
                                             desc.setPadding(8, 0, 8, 0);
@@ -183,7 +183,7 @@ public class MyEvent extends AppCompatActivity {
                                             ));
 
                                             TextView date = new TextView(MyEvent.this);
-                                            date.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
+                                            date.setText(filteredArray.getJSONObject(j).getString("Event_Date"));
                                             date.setTextColor(Color.parseColor("#FFFFFF"));
                                             date.setTextSize(20);
                                             date.setLayoutParams(new LinearLayout.LayoutParams(
@@ -317,7 +317,7 @@ public class MyEvent extends AppCompatActivity {
                                             name.setPadding(8, 0, 8, 0);
 
                                             TextView desc = new TextView(MyEvent.this);
-                                            desc.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
+                                            desc.setText(filteredArray.getJSONObject(j).getString("Event_Description"));
                                             desc.setTextColor(Color.parseColor("#FFFFFF"));
                                             desc.setTextSize(18);
                                             desc.setPadding(8, 0, 8, 0);
@@ -329,7 +329,7 @@ public class MyEvent extends AppCompatActivity {
                                             ));
 
                                             TextView date = new TextView(MyEvent.this);
-                                            date.setText(filteredArray.getJSONObject(j).getString("Event_Name"));
+                                            date.setText(filteredArray.getJSONObject(j).getString("Event_Date"));
                                             date.setTextColor(Color.parseColor("#FFFFFF"));
                                             date.setTextSize(20);
                                             date.setLayoutParams(new LinearLayout.LayoutParams(
