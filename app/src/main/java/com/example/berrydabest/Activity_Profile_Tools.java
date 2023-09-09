@@ -283,4 +283,11 @@ public class Activity_Profile_Tools extends AppCompatActivity {
 
         return  event_desc;
     }
+
+    // function to clearPreference
+    static void clearPreference(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("Secret", Context.MODE_PRIVATE);
+        sharedPreferences.edit().clear().commit();
+        return;
+    }
 }

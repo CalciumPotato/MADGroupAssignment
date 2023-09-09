@@ -70,7 +70,7 @@ public class Activity_Profile extends AppCompatActivity {
         img_back_editProfile.setOnClickListener(view -> finish());
 
         btn_profile_logout.setOnClickListener(view -> {
-            MainPage.clearPreference(Activity_Profile.this);
+            Activity_Profile_Tools.clearPreference(Activity_Profile.this);
             Intent intent = new Intent(getApplicationContext(), SignIn.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
