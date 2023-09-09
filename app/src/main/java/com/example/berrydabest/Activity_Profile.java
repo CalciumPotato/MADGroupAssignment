@@ -10,11 +10,8 @@ import static com.example.berrydabest.Activity_Profile_Tools.readPreference;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -37,7 +33,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class Activity_Profile extends AppCompatActivity {
 
@@ -64,8 +59,6 @@ public class Activity_Profile extends AppCompatActivity {
         eventContent = findViewById(R.id.layout_profile_content);
         navigationView = findViewById(R.id.navigation);
 
-//        MyThread connectThread = new MyThread("yikhengl@gmail.com", handler);
-//        connectThread.start();
         Activity_Profile.MyThread connectThread = new Activity_Profile.MyThread(email, handler);
         connectThread.start();
 
@@ -191,12 +184,9 @@ public class Activity_Profile extends AppCompatActivity {
                             phone = jsonObject.getString("Phone");
 
                             // A9. Update your UI elements (e.g., TextViews) with the retrieved data
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    tv_profile_username.setText(username);
-                                    tv_profile_userID.setText(email);
-                                }
+                            runOnUiThread(() -> {
+                                tv_profile_username.setText(username);
+                                tv_profile_userID.setText(email);
                             });
 
                         }
@@ -248,12 +238,9 @@ public class Activity_Profile extends AppCompatActivity {
 
                                         if (jsonArray3.length() > 0) {
 
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    // Clear content
-                                                    eventContent.removeAllViews();
-                                                }
+                                            runOnUiThread(() -> {
+                                                // Clear content
+                                                eventContent.removeAllViews();
                                             });
 
                                             // C6. JSON response -> JSONArray
@@ -274,73 +261,61 @@ public class Activity_Profile extends AppCompatActivity {
                                                     }
                                                 }
 
-                                                handler.post(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        try {
+                                                handler.post(() -> {
+                                                    try {
 
-                                                            for(int k = 0; k < filteredArray.length(); k++){
+                                                        for(int k = 0; k < filteredArray.length(); k++){
 
-                                                                // Create the parent LinearLayout: To hold event image + event details
-                                                                // Create the inner LinearLayout for event details: To hold event name, event date, event desc
-                                                                LinearLayout eventCard = Activity_Profile_Tools.createEventCard(Activity_Profile.this);
-                                                                LinearLayout eventDetails = Activity_Profile_Tools.createEventDetails(Activity_Profile.this);
+                                                            // Create the parent LinearLayout: To hold event image + event details
+                                                            // Create the inner LinearLayout for event details: To hold event name, event date, event desc
+                                                            LinearLayout eventCard = Activity_Profile_Tools.createEventCard(Activity_Profile.this);
+                                                            LinearLayout eventDetails = Activity_Profile_Tools.createEventDetails(Activity_Profile.this);
 
-                                                                String eventName = filteredArray.getJSONObject(k).getString("Event_Name");
-                                                                new Thread(){
-                                                                    public void run(){
-                                                                        try{
-                                                                            // Get event image
-                                                                            HttpURLConnection hc = Activity_Profile_Tools.connectSupabaseImage(eventName, getString(R.string.SUPABASE_KEY));
-                                                                            InputStream input = new BufferedInputStream((hc.getInputStream()));
-                                                                            Bitmap bm = BitmapFactory.decodeStream(input);
+                                                            String eventName = filteredArray.getJSONObject(k).getString("Event_Name");
+                                                            new Thread(){
+                                                                public void run(){
+                                                                    try{
+                                                                        // Get event image
+                                                                        HttpURLConnection hc = Activity_Profile_Tools.connectSupabaseImage(eventName, getString(R.string.SUPABASE_KEY));
+                                                                        InputStream input = new BufferedInputStream((hc.getInputStream()));
+                                                                        Bitmap bm = BitmapFactory.decodeStream(input);
 
-                                                                            ImageView img = Activity_Profile_Tools.createImg(Activity_Profile.this, bm);
-                                                                            // Add event image
-                                                                            handler.post(new Runnable() {
-                                                                                @Override
-                                                                                public void run() {
-
-                                                                                    eventCard.addView(img, 0);
-                                                                                }
-                                                                            });
-                                                                        }
-                                                                        catch(IOException e){
-                                                                            e.printStackTrace();
-                                                                        }
+                                                                        ImageView img = Activity_Profile_Tools.createImg(Activity_Profile.this, bm);
+                                                                        // Add event image
+                                                                        handler.post(() -> eventCard.addView(img, 0));
                                                                     }
-                                                                }.start();
-
-                                                                // Add TextView
-                                                                TextView event_name = Activity_Profile_Tools.createEventName(Activity_Profile.this, filteredArray, k);
-                                                                TextView event_date = Activity_Profile_Tools.createEventDate(Activity_Profile.this, filteredArray, k);
-                                                                TextView event_desc = Activity_Profile_Tools.createEventDesc(Activity_Profile.this, filteredArray, k);
-
-                                                                // Add ImageView and TextViews to the inner LinearLayout
-                                                                eventDetails.addView(event_name);
-                                                                eventDetails.addView(event_date);
-                                                                eventDetails.addView(event_desc);
-
-                                                                // Add the inner LinearLayout to the parent LinearLayout
-                                                                eventCard.addView(eventDetails);
-
-                                                                eventCard.setOnClickListener(new View.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(View view) {
-                                                                        String eventName = ((TextView)((ViewGroup)((ViewGroup)((ViewGroup) view).getChildAt(1))).getChildAt(0)).getText().toString();
-                                                                        Intent i = new Intent(Activity_Profile.this, EventAnalytic.class);
-                                                                        i.putExtra("EventName", eventName);
-                                                                        startActivity(i);
+                                                                    catch(IOException e){
+                                                                        e.printStackTrace();
                                                                     }
-                                                                });
+                                                                }
+                                                            }.start();
 
-                                                                // Add the parent LinearLayout to this custom view
-                                                                eventContent.addView(eventCard);
-                                                                eventContent.setPadding(8, 8, 8, 8);
-                                                            }
-                                                        } catch (JSONException e) {
-                                                            e.printStackTrace();
+                                                            // Add TextView
+                                                            TextView event_name = Activity_Profile_Tools.createEventName(Activity_Profile.this, filteredArray, k);
+                                                            TextView event_date = Activity_Profile_Tools.createEventDate(Activity_Profile.this, filteredArray, k);
+                                                            TextView event_desc = Activity_Profile_Tools.createEventDesc(Activity_Profile.this, filteredArray, k);
+
+                                                            // Add ImageView and TextViews to the inner LinearLayout
+                                                            eventDetails.addView(event_name);
+                                                            eventDetails.addView(event_date);
+                                                            eventDetails.addView(event_desc);
+
+                                                            // Add the inner LinearLayout to the parent LinearLayout
+                                                            eventCard.addView(eventDetails);
+
+                                                            eventCard.setOnClickListener(view -> {
+                                                                String eventName1 = ((TextView)((ViewGroup)((ViewGroup)((ViewGroup) view).getChildAt(1))).getChildAt(0)).getText().toString();
+                                                                Intent i1 = new Intent(Activity_Profile.this, EventAnalytic.class);
+                                                                i1.putExtra("EventName", eventName1);
+                                                                startActivity(i1);
+                                                            });
+
+                                                            // Add the parent LinearLayout to this custom view
+                                                            eventContent.addView(eventCard);
+                                                            eventContent.setPadding(8, 8, 8, 8);
                                                         }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
                                                     }
                                                 });
 
