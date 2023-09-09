@@ -19,44 +19,38 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#000000"
-                android:orientation="horizontal">
+                android:background="#1e1f22"
+                android:orientation="horizontal"
+                android:paddingLeft="2dp"
+                android:paddingTop="6dp"
+                android:paddingRight="2dp"
+                android:paddingBottom="6dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <Button
-                    android:id="@+id/button"
-                    android:layout_width="56dp"
+
+                <ImageView
+                    android:id="@+id/img_back"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/ic_baseline_arrow_back_ios_new_24" />
+                    android:layout_gravity="center"
+                    android:padding="4dp"
+                    app:srcCompat="@drawable/ic_baseline_arrow_back_ios_new_24" />
 
                 <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="198dp"
+                    android:id="@+id/tv_title_editProfile"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:paddingLeft="20dp"
                     android:text="Event Analytic"
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/button2"
-                    android:layout_width="57dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/circle1"
-                    android:text="Button"
-                    android:textColor="@color/white" />
-
-                <Button
-                    android:id="@+id/button3"
-                    android:layout_width="55dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/circle1"
-                    android:text="Button"
-                    android:textColor="@color/white" />
             </LinearLayout>
 
             <LinearLayout
@@ -108,7 +102,6 @@
                             android:layout_height="94dp"
                             android:clickable="true"
                             android:contentDescription="Clickable Image"
-                            android:onClick="onImageClick"
                             android:scaleType="fitCenter"
                             android:src="@drawable/attendance" />
 

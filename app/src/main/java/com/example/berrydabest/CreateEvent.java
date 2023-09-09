@@ -74,15 +74,24 @@ public class CreateEvent extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
         }
 
+        ImageView backBtn = findViewById(R.id.img_back);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         // Bottom navigation bar
         navigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-
+                    startActivity(new Intent(CreateEvent.this, Activity_Profile.class));
                     Toast.makeText(CreateEvent.this, "Home", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_calendar:
                     // Handle dashboard navigation
+                    startActivity(new Intent(CreateEvent.this, CalendarActivity.class));
                     Toast.makeText(CreateEvent.this, "Calendar", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_qrScanner:
@@ -94,6 +103,7 @@ public class CreateEvent extends AppCompatActivity {
                     return true;
                 case R.id.navigation_myEvent:
                     // Handle notifications navigation
+                    startActivity(new Intent(CreateEvent.this, MyEvent.class));
                     Toast.makeText(CreateEvent.this, "My Event", Toast.LENGTH_SHORT).show();
                     return true;
             }
