@@ -173,7 +173,7 @@ public class SignIn extends AppCompatActivity {
                         mHandler.post(new Runnable() {
 
                             public void run() {
-                                showMessage("Success!");
+                                showMessage("Loggeed in successfully!");
                                 appendPreference(SignIn.this,"Password",password);
                                 appendPreference(SignIn.this,"Email",email);
                                 Intent intent = new Intent(SignIn.this, MainPage.class);
