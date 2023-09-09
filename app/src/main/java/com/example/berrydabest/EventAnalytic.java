@@ -44,23 +44,36 @@ import java.util.Iterator;
 
 public class EventAnalytic extends AppCompatActivity {
 
+    private String Nameevent;
     private static final int REQUEST_CODE_WRITE_STORAGE = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_analytic);
+        String eventName = this.getIntent().getStringExtra("EventName");
+        Nameevent = eventName;
         final Handler handler = new Handler();
         String email = "yikhengl@gmail.com";
+
+        ImageView backBtn = findViewById(R.id.img_back);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         BottomNavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+                    startActivity(new Intent(EventAnalytic.this, Activity_Profile.class));
                     Toast.makeText(EventAnalytic.this, "Home", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_calendar:
                     // Handle dashboard navigation
+                    startActivity(new Intent(EventAnalytic.this, CalendarActivity.class));
                     Toast.makeText(EventAnalytic.this, "Calendar", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_qrScanner:
@@ -72,6 +85,7 @@ public class EventAnalytic extends AppCompatActivity {
                     return true;
                 case R.id.navigation_myEvent:
                     // Handle notifications navigation
+                    startActivity(new Intent(EventAnalytic.this, MyEvent.class));
                     Toast.makeText(EventAnalytic.this, "My Event", Toast.LENGTH_SHORT).show();
                     return true;
             }
@@ -149,11 +163,10 @@ public class EventAnalytic extends AppCompatActivity {
         public void run() {
             try {
 
-                String eventString = "2222";
-                String encodedEventString = eventString.replace(" ", "%20");
+                String encodedEventString = Nameevent.replace(" ", "%20");
                 // 1. Access to the Supabase URL
                 email = "yikhengl@gmail.com";
-                String urlString = "https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/QR/"+ eventString +".jpeg";
+                String urlString = "https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/QR/"+ encodedEventString +".jpeg";
 
                 URL url = new URL(urlString);
 
@@ -174,7 +187,7 @@ public class EventAnalytic extends AppCompatActivity {
                     InputStream inputStream = urlConnection.getInputStream();
 
                     // Create a file to save the image locally
-                    String fileName = eventString + ".jpg";
+                    String fileName = Nameevent + ".jpg";
                     File imageFile = new File(getFilesDir(), fileName);
 
                     FileOutputStream outputStream = new FileOutputStream(imageFile);
@@ -222,8 +235,7 @@ public class EventAnalytic extends AppCompatActivity {
         public void run() {
             try {
 
-                String eventString = "Mooncake Festival";
-                String encodedEventString = eventString.replace(" ", "%20");
+                String encodedEventString = Nameevent.replace(" ", "%20");
                 // 1. Access to the Supabase URL
                 email = "yikhengl@gmail.com";
                 String tableUrl = "https://lqhrxmdxtxyycnftttks.supabase.co/rest/v1/";
@@ -305,6 +317,13 @@ public class EventAnalytic extends AppCompatActivity {
 
                         Log.d("Alert", "Before AlertDialog creation");
                         // Show the AlertDialog on the main UI thread
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                        });
                         Log.d("Alert", "After AlertDialog creation");
 
                     } catch (JSONException e) {
@@ -343,11 +362,10 @@ public class EventAnalytic extends AppCompatActivity {
         public void run() {
             try {
 
-                String eventString = "Mooncake Festival";
-                String encodedEventString = eventString.replace(" ", "%20");
+                String encodedEventString = Nameevent.replace(" ", "%20");
                 // 1. Access to the Supabase URL
                 email = "yikhengl@gmail.com";
-                String urlString = "https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/image/"+eventString+".jpg";
+                String urlString = "https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/image/"+Nameevent+".jpg";
                 URL url = new URL(urlString);
 
                 Log.i("##### DEBUG #####", "url: " + url.toString());
@@ -365,7 +383,7 @@ public class EventAnalytic extends AppCompatActivity {
                     InputStream inputStream = urlConnection.getInputStream();
 
                     // Create a file to save the image locally
-                    String fileName = eventString + ".jpg";
+                    String fileName = Nameevent + ".jpg";
                     File imageFile = new File(getFilesDir(), fileName);
 
                     FileOutputStream outputStream = new FileOutputStream(imageFile);
