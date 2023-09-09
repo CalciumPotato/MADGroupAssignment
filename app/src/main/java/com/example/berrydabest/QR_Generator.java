@@ -26,7 +26,7 @@ public class QR_Generator extends AppCompatActivity {
 
     private ImageView qrCodeImageView;
     private static final int QR_CODE_SIZE = 500;
-    private String qr = "ong9";//change to event name
+    private String qr = "ong12";//change to event name
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

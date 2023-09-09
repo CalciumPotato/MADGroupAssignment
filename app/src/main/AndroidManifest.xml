@@ -26,13 +26,14 @@
             android:exported="true" />
         <activity
             android:name=".MainPage"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".EventDetail"
             android:exported="true" />
@@ -54,7 +55,7 @@
             android:exported="false" />
         <activity
             android:name=".QR_Generator"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".QR_Scan"
             android:exported="false" />

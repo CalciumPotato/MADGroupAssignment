@@ -203,6 +203,8 @@ public class CreateEvent extends AppCompatActivity {
         MyThread2 connectingThread2 = new MyThread2(imagePath,eventName +".jpeg");
         connectingThread2.start();
 
+        Toast.makeText(CreateEvent.this, "Event Has been created!", Toast.LENGTH_SHORT).show();
+
 
 //        Intent intent = new Intent(this, QR_Generator.class);
 //        intent.putExtra("eventName", eventName);
@@ -287,7 +289,6 @@ public class CreateEvent extends AppCompatActivity {
                 if(hc.getResponseCode() == 200){ // check if success HTTP request, successfully accessed a web API, successfully read from the webpage
                     //OK response code
                     //result:response come from web server
-                    Log.i("MainActivity2","Response: "+result);
                     // Intent intent = new Intent(CreateEvent.this, LinkDBActivity.class);
                     // intent.putExtra("response",result);
                     // startActivity(intent);
@@ -298,7 +299,6 @@ public class CreateEvent extends AppCompatActivity {
                 else{
                     Log.i("MainActivity","Response Code:" + hc.getResponseCode());
                 }
-
                 input.close();
 
             } catch (IOException | JSONException e) {
@@ -345,6 +345,7 @@ public class CreateEvent extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
 
 

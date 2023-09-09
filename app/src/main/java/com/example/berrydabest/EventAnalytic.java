@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -312,7 +313,10 @@ public class EventAnalytic extends AppCompatActivity {
                             }
                         }
 
-                        builder.setView(containerLayout);
+                        ScrollView scrollView = new ScrollView(EventAnalytic.this);
+                        scrollView.addView(containerLayout);
+
+                        builder.setView(scrollView);
                         builder.setPositiveButton("OK", null);
 
                         Log.d("Alert", "Before AlertDialog creation");
