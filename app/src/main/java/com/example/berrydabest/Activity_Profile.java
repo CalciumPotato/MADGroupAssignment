@@ -23,8 +23,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,10 +34,10 @@ import java.net.HttpURLConnection;
 
 public class Activity_Profile extends AppCompatActivity {
 
+    private ImageView img_back_editProfile;
     private LinearLayout eventContent;
     private TextView tv_profile_username, tv_profile_userID;
-    private Button btn_profile_edit, btn_profile_swap1, btn_profile_swap2;
-    private BottomNavigationView navigationView;
+    private Button btn_profile_edit, btn_profile_logout, btn_profile_swap1, btn_profile_swap2;
     private Boolean btn_upcoming = true;
 
     @Override
@@ -51,13 +49,14 @@ public class Activity_Profile extends AppCompatActivity {
         String email = readPreference(this, "Email", "");
 
         // findViewById
+        img_back_editProfile = findViewById(R.id.img_back_editProfile);
         tv_profile_username = findViewById(R.id.tv_profile_username);
         tv_profile_userID = findViewById(R.id.tv_profile_email);
         btn_profile_edit = findViewById(R.id.btn_profile_edit);
+        btn_profile_logout = findViewById(R.id.btn_profile_logout);
         btn_profile_swap1 = findViewById(R.id.btn_profile_swap1);
         btn_profile_swap2 = findViewById(R.id.btn_profile_swap2);
         eventContent = findViewById(R.id.layout_profile_content);
-        navigationView = findViewById(R.id.navigation);
 
         Activity_Profile.MyThread connectThread = new Activity_Profile.MyThread(email, handler);
         connectThread.start();
@@ -67,6 +66,17 @@ public class Activity_Profile extends AppCompatActivity {
         btn_profile_swap2.setBackgroundColor(btn_profile_swap2.getContext().getResources().getColor(R.color.btn_deselected));
 
         // Listeners
+        // Go back
+        img_back_editProfile.setOnClickListener(view -> finish());
+
+        btn_profile_logout.setOnClickListener(view -> {
+            MainPage.clearPreference(Activity_Profile.this);
+            Intent intent = new Intent(getApplicationContext(), SignIn.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        });
+
         // Go to Edit Profile page
         btn_profile_edit.setOnClickListener(view -> {
             try {
@@ -97,33 +107,6 @@ public class Activity_Profile extends AppCompatActivity {
             // Create thread
             MyThread connectThread12 = new MyThread(email, handler);
             connectThread12.start();
-        });
-
-
-        // Bottom navigation bar
-        navigationView.setOnNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    startActivity(new Intent(this, Activity_Profile.class));
-                    Toast.makeText(Activity_Profile.this, "Home", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.navigation_calendar:
-                    // Handle dashboard navigation
-                    Toast.makeText(Activity_Profile.this, "Calendar", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.navigation_qrScanner:
-                    // Handle notifications navigation
-                    Intent intent = new Intent(this, QR_Scan.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.right, R.anim.left);
-                    Toast.makeText(Activity_Profile.this, "QR Scanner", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.navigation_myEvent:
-                    // Handle notifications navigation
-                    Toast.makeText(Activity_Profile.this, "My Event", Toast.LENGTH_SHORT).show();
-                    return true;
-            }
-            return false;
         });
 
     }
@@ -305,7 +288,7 @@ public class Activity_Profile extends AppCompatActivity {
 
                                                             eventCard.setOnClickListener(view -> {
                                                                 String eventName1 = ((TextView)((ViewGroup)((ViewGroup)((ViewGroup) view).getChildAt(1))).getChildAt(0)).getText().toString();
-                                                                Intent i1 = new Intent(Activity_Profile.this, EventAnalytic.class);
+                                                                Intent i1 = new Intent(Activity_Profile.this, EventDetail.class);
                                                                 i1.putExtra("EventName", eventName1);
                                                                 startActivity(i1);
                                                             });

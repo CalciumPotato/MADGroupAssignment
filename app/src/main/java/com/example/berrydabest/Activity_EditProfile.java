@@ -6,7 +6,6 @@ import static com.example.berrydabest.Activity_Profile_Tools.readPreference;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -52,24 +51,16 @@ public class Activity_EditProfile extends AppCompatActivity {
         getUserInfoThread.start();
 
         // Listener
-        img_back_editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        img_back_editProfile.setOnClickListener(view -> finish());
 
-        btn_editProfile_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Create thread
-                MyThread2 connectThread = new MyThread2(email,
-                        et_editProfile_password.getText().toString(),
-                        et_editProfile_name.getText().toString(),
-                        et_editProfile_phone.getText().toString(),
-                        handler);
-                connectThread.start();
-            }
+        btn_editProfile_save.setOnClickListener(view -> {
+            // Create thread
+            MyThread2 connectThread = new MyThread2(email,
+                    et_editProfile_password.getText().toString(),
+                    et_editProfile_name.getText().toString(),
+                    et_editProfile_phone.getText().toString(),
+                    handler);
+            connectThread.start();
         });
 
     }
