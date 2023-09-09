@@ -6,9 +6,12 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -62,28 +65,17 @@ public class MainPage extends AppCompatActivity {
         });
 
         ImageView add = findViewById(R.id.img_create);
-        /*add.setOnClickListener(new View.OnClickListener() {
+        add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainPage.this, CreateEvent.class));
             }
-        });*/
-
-        // logout function
-        ImageView logout = findViewById(R.id.img_logout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearPreference(MainPage.this);
-                startActivity(new Intent(MainPage.this, SignIn.class));
-                finish();
-            }
         });
+
 
         navigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    startActivity(new Intent(MainPage.this, Activity_Profile.class));
                     return true;
                 case R.id.navigation_calendar:
                     // Handle dashboard navigation
@@ -141,15 +133,21 @@ public class MainPage extends AppCompatActivity {
                         public void run() {
                             LinearLayout ll = findViewById(R.id.closest);
                             LinearLayout layout = new LinearLayout(MainPage.this);
-                            layout.setOrientation(LinearLayout.HORIZONTAL);
-                            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            layout.setOrientation(LinearLayout.VERTICAL);
+                            layout.setBackgroundColor(Color.parseColor("#3f4248"));
+                            layout.setPadding(8, 8, 8, 8);
+                            layoutParams.setMargins(16, 16, 16, 16);
+                            layout.setLayoutParams(layoutParams);
+                            /*LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(
                                     LinearLayout.LayoutParams.MATCH_PARENT,
                                     LinearLayout.LayoutParams.MATCH_PARENT
-                            );
-                            linearParams.setMargins(10, 10,10,10);
-                            layout.setPadding(20, 20, 20, 20);
-                            layout.setLayoutParams(linearParams);
-                            layout.setBackgroundResource(R.drawable.border);
+                            );*/
+                            //linearParams.setMargins(10, 10,10,10);
+                            //layout.setPadding(20, 20, 20, 20);
+                            //layout.setLayoutParams(linearParams);
+                            //layout.setBackgroundResource(R.drawable.border);
                             new Thread(){
                                 public void run(){
                                     try{
@@ -164,14 +162,21 @@ public class MainPage extends AppCompatActivity {
                                         handler.post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
+                                                /*LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
                                                         0,
                                                         LinearLayout.LayoutParams.MATCH_PARENT
-                                                );
-                                                imgParams.weight = 1;
+                                                );*/
+                                                //imgParams.weight = 1;
                                                 ImageView img = new ImageView(MainPage.this);
+                                                img.setPadding(8, 8, 8, 8);
+                                                img.setAdjustViewBounds(true);
+                                                img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                                img.setLayoutParams(new LinearLayout.LayoutParams(
+                                                        LinearLayout.LayoutParams.MATCH_PARENT, // width
+                                                        350
+                                                ));
                                                 img.setImageBitmap(bm);
-                                                img.setLayoutParams(imgParams);
+                                               // img.setLayoutParams(imgParams);
                                                 layout.addView(img, 0);
                                             }
                                         });
@@ -183,28 +188,59 @@ public class MainPage extends AppCompatActivity {
                             }.start();
 
 
-                            LinearLayout.LayoutParams inParams = new LinearLayout.LayoutParams(
+                           /* LinearLayout.LayoutParams inParams = new LinearLayout.LayoutParams(
                                     0,
                                     LinearLayout.LayoutParams.WRAP_CONTENT
                             );
-                            inParams.weight = 2;
+                            inParams.weight = 2;*/
                             LinearLayout innerLayout = new LinearLayout(MainPage.this);
                             innerLayout.setOrientation(LinearLayout.VERTICAL);
-                            innerLayout.setLayoutParams(inParams);
+                            innerLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT, // width
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    1  // weight
+                            ));
+                            innerLayout.setPadding(8, 8, 8, 8);
+                            /*innerLayout.setOrientation(LinearLayout.VERTICAL);
+                            innerLayout.setLayoutParams(inParams);*/
                             try {
                                 TextView name = new TextView(MainPage.this);
                                 name.setText(closest.getString("Event_Name"));
                                 name.setTextColor(Color.parseColor("#FFFFFF"));
-                                name.setTextSize(20);
+                                name.setTextSize(28);
                                 name.setMaxLines(1);
                                 name.setEllipsize(TextUtils.TruncateAt.END);
+                                name.setLayoutParams(new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                ));
+                                name.setTypeface(null, Typeface.BOLD);
+                                name.setPadding(8, 0, 8, 0);
+
                                 TextView desc = new TextView(MainPage.this);
                                 desc.setText(closest.getString("Event_Description"));
                                 desc.setTextColor(Color.parseColor("#FFFFFF"));
-                                desc.setTextSize(20);
+                                desc.setTextSize(18);
+                                desc.setPadding(8, 0, 8, 0);
                                 desc.setMaxLines(4);
                                 desc.setEllipsize(TextUtils.TruncateAt.END);
+                                desc.setLayoutParams(new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                ));
+
+                                TextView date = new TextView(MainPage.this);
+                                date.setText(closest.getString("Event_Date"));
+                                date.setTextColor(Color.parseColor("#FFFFFF"));
+                                date.setTextSize(20);
+                                date.setLayoutParams(new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                ));
+                                date.setPadding(8, 0, 8, 0);
+
                                 innerLayout.addView(name);
+                                innerLayout.addView(date);
                                 innerLayout.addView(desc);
 
                                 layout.addView(innerLayout);
@@ -220,7 +256,7 @@ public class MainPage extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            ll.addView(layout, 1);
+                            ll.addView(layout);
                         }
                     });
                 } catch (IOException | JSONException | ParseException e) {
@@ -255,15 +291,14 @@ public class MainPage extends AppCompatActivity {
                                 }
                                 for(int i = 0; i < filteredArray.length(); i++){
                                     LinearLayout layout = new LinearLayout(MainPage.this);
-                                    layout.setOrientation(LinearLayout.HORIZONTAL);
-                                    LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(
-                                            LinearLayout.LayoutParams.MATCH_PARENT,
-                                            LinearLayout.LayoutParams.MATCH_PARENT
-                                    );
-                                    linearParams.setMargins(0, 10,0,10);
-                                    layout.setPadding(20, 20, 20, 20);
-                                    layout.setLayoutParams(linearParams);
-                                    layout.setBackgroundResource(R.drawable.border);
+                                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    layout.setOrientation(LinearLayout.VERTICAL);
+                                    layout.setBackgroundColor(Color.parseColor("#3f4248"));
+                                    layout.setPadding(8, 8, 8, 8);
+                                    layoutParams.setMargins(16, 16, 16, 16);
+                                    layout.setLayoutParams(layoutParams);
+
                                     String eventName = filteredArray.getJSONObject(i).getString("Event_Name");
                                     new Thread(){
                                         public void run(){
@@ -278,14 +313,16 @@ public class MainPage extends AppCompatActivity {
                                                 handler.post(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
-                                                                0,
-                                                                LinearLayout.LayoutParams.MATCH_PARENT
-                                                        );
-                                                        imgParams.weight = 1;
                                                         ImageView img = new ImageView(MainPage.this);
+                                                        img.setPadding(8, 8, 8, 8);
+                                                        img.setAdjustViewBounds(true);
+                                                        img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                                        img.setLayoutParams(new LinearLayout.LayoutParams(
+                                                                LinearLayout.LayoutParams.MATCH_PARENT, // width
+                                                                350
+                                                        ));
                                                         img.setImageBitmap(bm);
-                                                        img.setLayoutParams(imgParams);
+                                                        // img.setLayoutParams(imgParams);
                                                         layout.addView(img, 0);
                                                     }
                                                 });
@@ -297,28 +334,52 @@ public class MainPage extends AppCompatActivity {
                                     }.start();
 
 
-                                    LinearLayout.LayoutParams inParams = new LinearLayout.LayoutParams(
-                                            0,
-                                            LinearLayout.LayoutParams.WRAP_CONTENT
-                                    );
-                                    inParams.weight = 2;
                                     LinearLayout innerLayout = new LinearLayout(MainPage.this);
                                     innerLayout.setOrientation(LinearLayout.VERTICAL);
-                                    innerLayout.setLayoutParams(inParams);
-
+                                    innerLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT, // width
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            1  // weight
+                                    ));
+                                    innerLayout.setPadding(8, 8, 8, 8);
 
                                     TextView name = new TextView(MainPage.this);
                                     name.setText(filteredArray.getJSONObject(i).getString("Event_Name"));
                                     name.setTextColor(Color.parseColor("#FFFFFF"));
+                                    name.setTextSize(28);
                                     name.setMaxLines(1);
                                     name.setEllipsize(TextUtils.TruncateAt.END);
+                                    name.setLayoutParams(new LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                    ));
+                                    name.setTypeface(null, Typeface.BOLD);
+                                    name.setPadding(8, 0, 8, 0);
+
                                     TextView desc = new TextView(MainPage.this);
-                                    desc.setText(filteredArray.getJSONObject(i).getString("Event_Description"));
+                                    desc.setText(filteredArray.getJSONObject(i).getString("Event_Name"));
                                     desc.setTextColor(Color.parseColor("#FFFFFF"));
+                                    desc.setTextSize(18);
+                                    desc.setPadding(8, 0, 8, 0);
                                     desc.setMaxLines(4);
                                     desc.setEllipsize(TextUtils.TruncateAt.END);
+                                    desc.setLayoutParams(new LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                    ));
+
+                                    TextView date = new TextView(MainPage.this);
+                                    date.setText(filteredArray.getJSONObject(i).getString("Event_Name"));
+                                    date.setTextColor(Color.parseColor("#FFFFFF"));
+                                    date.setTextSize(20);
+                                    date.setLayoutParams(new LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                    ));
+                                    date.setPadding(8, 0, 8, 0);
 
                                     innerLayout.addView(name);
+                                    innerLayout.addView(date);
                                     innerLayout.addView(desc);
 
                                     layout.addView(innerLayout);
