@@ -87,7 +87,7 @@ public class Activity_Profile extends AppCompatActivity {
 
         // Button: Upcoming events
         btn_profile_swap1.setOnClickListener(view -> {
-            Toast.makeText(Activity_Profile.this, "Showing upcoming events", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Activity_Profile.this, "Showing upcoming participated events", Toast.LENGTH_SHORT).show();
             btn_upcoming = true;
             btn_profile_swap1.setBackgroundColor(btn_profile_swap1.getContext().getResources().getColor(R.color.btn_selected));
             btn_profile_swap2.setBackgroundColor(btn_profile_swap2.getContext().getResources().getColor(R.color.btn_deselected));
@@ -97,7 +97,7 @@ public class Activity_Profile extends AppCompatActivity {
         });
 
         btn_profile_swap2.setOnClickListener(view -> {
-            Toast.makeText(Activity_Profile.this, "Showing past events", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Activity_Profile.this, "Showing past participated events", Toast.LENGTH_SHORT).show();
             btn_upcoming = false;
             btn_profile_swap1.setBackgroundColor(btn_profile_swap1.getContext().getResources().getColor(R.color.btn_deselected));
             btn_profile_swap2.setBackgroundColor(btn_profile_swap2.getContext().getResources().getColor(R.color.btn_selected));
@@ -261,22 +261,13 @@ public class Activity_Profile extends AppCompatActivity {
                                                 JSONObject jsonObject = jsonArray3.getJSONObject(j);
                                                 String date = jsonObject.getString("Event_Date");
 
-                                                if(btn_upcoming == true) {
-
-/*
-                                                    btn_profile_swap1.setBackgroundTintList(ContextCompat.getColorStateList(Activity_Profile.this, R.color.btn_selected));
-                                                    btn_profile_swap2.setBackgroundTintList(ContextCompat.getColorStateList(Activity_Profile.this, R.color.btn_deselected));
-*/
+                                                if(btn_upcoming) {
                                                     if (Activity_Profile_Tools.CompareTwoDates(date)) {
                                                         filteredArray.put(jsonObject);
                                                         Log.i("##### DEBUG #####", "filteredArray:" + filteredArray);
                                                     }
                                                 }
                                                 else {
-/*
-                                                    btn_profile_swap1.setBackgroundTintList(ContextCompat.getColorStateList(Activity_Profile.this, R.color.btn_deselected));
-                                                    btn_profile_swap2.setBackgroundTintList(ContextCompat.getColorStateList(Activity_Profile.this, R.color.btn_selected));
-*/
                                                     if (!Activity_Profile_Tools.CompareTwoDates(date)) {
                                                         filteredArray.put(jsonObject);
                                                         Log.i("##### DEBUG #####", "filteredArray:" + filteredArray);
@@ -290,52 +281,26 @@ public class Activity_Profile extends AppCompatActivity {
 
                                                             for(int k = 0; k < filteredArray.length(); k++){
 
-                                                                // Create the parent LinearLayout: event image + event details
-                                                                LinearLayout eventCard = new LinearLayout(Activity_Profile.this);
-                                                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                                                eventCard.setOrientation(LinearLayout.VERTICAL);
-                                                                eventCard.setBackgroundColor(Color.parseColor("#3f4248"));
-                                                                eventCard.setPadding(8, 8, 8, 8);
-                                                                layoutParams.setMargins(16, 16, 16, 16);
-                                                                eventCard.setLayoutParams(layoutParams);
-
-                                                                // Create the inner LinearLayout for text
-                                                                LinearLayout eventDetails = new LinearLayout(Activity_Profile.this);
-                                                                eventDetails.setOrientation(LinearLayout.VERTICAL);
-                                                                eventDetails.setLayoutParams(new LinearLayout.LayoutParams(
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT, // width
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                                                        1  // weight
-                                                                ));
-                                                                eventDetails.setPadding(8, 8, 8, 8);
+                                                                // Create the parent LinearLayout: To hold event image + event details
+                                                                // Create the inner LinearLayout for event details: To hold event name, event date, event desc
+                                                                LinearLayout eventCard = Activity_Profile_Tools.createEventCard(Activity_Profile.this);
+                                                                LinearLayout eventDetails = Activity_Profile_Tools.createEventDetails(Activity_Profile.this);
 
                                                                 String eventName = filteredArray.getJSONObject(k).getString("Event_Name");
                                                                 new Thread(){
                                                                     public void run(){
                                                                         try{
                                                                             // Get event image
-                                                                            URL url = new URL("https://lqhrxmdxtxyycnftttks.supabase.co/storage/v1/object/image/"+eventName+".jpg");
-                                                                            HttpURLConnection hc = (HttpURLConnection) url.openConnection();
-                                                                            hc.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
-                                                                            hc.setRequestProperty("Content-Type", "image/jpeg");
+                                                                            HttpURLConnection hc = Activity_Profile_Tools.connectSupabaseImage(eventName, getString(R.string.SUPABASE_KEY));
                                                                             InputStream input = new BufferedInputStream((hc.getInputStream()));
                                                                             Bitmap bm = BitmapFactory.decodeStream(input);
 
+                                                                            ImageView img = Activity_Profile_Tools.createImg(Activity_Profile.this, bm);
                                                                             // Add event image
                                                                             handler.post(new Runnable() {
                                                                                 @Override
                                                                                 public void run() {
-                                                                                    ImageView img = new ImageView(Activity_Profile.this);
-                                                                                    img.setPadding(8, 8, 8, 8);
-                                                                                    img.setAdjustViewBounds(true);
-                                                                                    img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                                                                                    img.setLayoutParams(new LinearLayout.LayoutParams(
-                                                                                            LinearLayout.LayoutParams.MATCH_PARENT, // width
-                                                                                            200
-                                                                                    ));
-                                                                                    img.setImageBitmap(bm);
-//                                                                                    img.setLayoutParams(imgParams);
+
                                                                                     eventCard.addView(img, 0);
                                                                                 }
                                                                             });
@@ -347,39 +312,9 @@ public class Activity_Profile extends AppCompatActivity {
                                                                 }.start();
 
                                                                 // Add TextView
-                                                                TextView event_name = new TextView(Activity_Profile.this);
-                                                                event_name.setLayoutParams(new LinearLayout.LayoutParams(
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                                                ));
-                                                                event_name.setText(filteredArray.getJSONObject(k).getString("Event_Name"));
-                                                                event_name.setTextColor(Color.parseColor("#FFFFFF"));
-                                                                event_name.setTextSize(28);
-                                                                event_name.setTypeface(null, Typeface.BOLD);
-                                                                event_name.setPadding(8, 0, 8, 0);
-                                                                event_name.setMaxLines(1);
-                                                                event_name.setEllipsize(TextUtils.TruncateAt.END);
-
-                                                                TextView event_date = new TextView(Activity_Profile.this);
-                                                                event_date.setLayoutParams(new LinearLayout.LayoutParams(
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                                                ));
-                                                                event_date.setText(filteredArray.getJSONObject(k).getString("Event_Date"));
-                                                                event_date.setTextColor(Color.parseColor("#FFFFFF"));
-                                                                event_date.setPadding(8, 0, 8, 0);
-
-                                                                TextView event_desc = new TextView(Activity_Profile.this);
-                                                                event_desc.setLayoutParams(new LinearLayout.LayoutParams(
-                                                                        LinearLayout.LayoutParams.MATCH_PARENT,
-                                                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                                                ));
-                                                                event_desc.setText(filteredArray.getJSONObject(k).getString("Event_Description"));
-                                                                event_desc.setTextColor(Color.parseColor("#FFFFFF"));
-                                                                event_desc.setTextSize(18);
-                                                                event_desc.setPadding(8, 0, 8, 0);
-                                                                event_desc.setMaxLines(4);
-                                                                event_desc.setEllipsize(TextUtils.TruncateAt.END);
+                                                                TextView event_name = Activity_Profile_Tools.createEventName(Activity_Profile.this, filteredArray, k);
+                                                                TextView event_date = Activity_Profile_Tools.createEventDate(Activity_Profile.this, filteredArray, k);
+                                                                TextView event_desc = Activity_Profile_Tools.createEventDesc(Activity_Profile.this, filteredArray, k);
 
                                                                 // Add ImageView and TextViews to the inner LinearLayout
                                                                 eventDetails.addView(event_name);
@@ -417,9 +352,7 @@ public class Activity_Profile extends AppCompatActivity {
                                 }
                             }
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (JSONException | IOException e) {
                         e.printStackTrace();
                     }
                 }
