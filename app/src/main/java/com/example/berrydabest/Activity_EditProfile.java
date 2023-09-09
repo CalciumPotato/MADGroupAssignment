@@ -3,6 +3,7 @@ package com.example.berrydabest;
 import static com.example.berrydabest.Activity_Profile_Tools.getResponse;
 import static com.example.berrydabest.Activity_Profile_Tools.readPreference;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +37,12 @@ public class Activity_EditProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        // Change status bar colour
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.darker_grey));
+        }
+
 
         String email = readPreference(this, "Email", "");
         Log.i("##### DEBUG #####", "email: " + email);
