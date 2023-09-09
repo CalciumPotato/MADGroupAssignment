@@ -73,9 +73,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="NextEvent"
+                android:text="Your Next Event"
                 android:textColor="#FFFFFF"
-                android:textSize="23dp" />
+                android:textSize="18dp" />
 
 
         </LinearLayout>
@@ -84,9 +84,10 @@
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:padding="10dp"
-            android:text="OtherEvents"
+            android:layout_marginTop="16dp"
+            android:padding="8dp"
+            android:text="Discover Events"
+            android:textSize="16dp"
             android:textColor="#FFFFFF" />
 
     </LinearLayout>
@@ -96,7 +97,6 @@
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="30dp"
         android:visibility="visible">
 
         <LinearLayout
