@@ -1,5 +1,7 @@
 package com.example.berrydabest;
 
+import static com.example.berrydabest.Activity_Profile_Tools.readPreference;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -46,6 +48,7 @@ import java.util.Iterator;
 public class EventAnalytic extends AppCompatActivity {
 
     private String Nameevent;
+    private String email;
     private static final int REQUEST_CODE_WRITE_STORAGE = 1001;
 
     @Override
@@ -57,7 +60,8 @@ public class EventAnalytic extends AppCompatActivity {
         Nameevent = eventName;
         final Handler handler = new Handler();
 
-        String email = "yikhengl@gmail.com";
+        String Email = readPreference(this, "Email", "");
+        email = Email;
         TextView name = findViewById(R.id.textView2);
         name.setText(eventName);
 
