@@ -52,14 +52,16 @@ public class EventAnalytic extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_analytic);
+
         String eventName = this.getIntent().getStringExtra("EventName");
         Nameevent = eventName;
         final Handler handler = new Handler();
-        String email = "yikhengl@gmail.com";
 
+        String email = "yikhengl@gmail.com";
         TextView name = findViewById(R.id.textView2);
         name.setText(eventName);
 
+        //Back Button
         ImageView backBtn = findViewById(R.id.img_back);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +70,7 @@ public class EventAnalytic extends AppCompatActivity {
             }
         });
 
+        //Navigation Bar
         BottomNavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
@@ -99,58 +102,31 @@ public class EventAnalytic extends AppCompatActivity {
         ShowImage imageThread = new ShowImage("yikhengl@gmail.com", handler);
         imageThread.start();
 
+        //Press on List Image to show Participant List
         ImageView participantListImageView = findViewById(R.id.ParticipantList);
         participantListImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Code to execute when the ImageView is clicked
-                // For example, you can start a new activity or show a dialog
-                // Example: Starting a new activity
                 MyThread connectThread = new MyThread("yikhengl@gmail.com", handler);
                 connectThread.start();
             }
         });
 
 
-
+        //Press on QR Image to show QR
         ImageView AttendanceQR = findViewById(R.id.AttendanceQR);
         AttendanceQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Code to execute when the ImageView is clicked
-                // For example, you can start a new activity or show a dialog
-                // Example: Starting a new activity
                 DisplayQR connectThread = new DisplayQR("yikhengl@gmail.com", handler);
                 connectThread.start();
             }
 
         });
-
-        //        ImageView ExportCSV = findViewById(R.id.ExportCSV);
-//        ExportCSV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Code to execute when the ImageView is clicked
-//                // For example, you can start a new activity or show a dialog
-//                // Example: Starting a new activity
-//                if (ContextCompat.checkSelfPermission(EventAnalytic.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//                    // Permission is granted, proceed with other initialization or your thread
-//                    MyThread2 connectThread = new MyThread2("yikhengl@gmail.com", handler);
-//                    connectThread.start();
-//
-//                } else {
-//                    // Permission is not granted, request it
-//                    ActivityCompat.requestPermissions(EventAnalytic.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_STORAGE);
-//                }
-//
-//
-//
-//            }
-//        });
     }
 
 
-
+    // Display the QR code that is stored in supabase
     private class DisplayQR extends Thread {
 
         private String email;
@@ -222,7 +198,7 @@ public class EventAnalytic extends AppCompatActivity {
         }
     }
 
-
+    // Participant List, Retreive data from supabase
     private class MyThread extends Thread {
 
         private String email;
@@ -233,7 +209,8 @@ public class EventAnalytic extends AppCompatActivity {
 
         HttpURLConnection urlConnection = null;
 
-        // 2.3 Constructor
+
+
         public MyThread(String email, Handler handler) {
             this.email = email;
             this.handler = handler;
@@ -321,11 +298,7 @@ public class EventAnalytic extends AppCompatActivity {
 
                                 // Add the custom layout to the AlertDialog
                                 containerLayout.addView(customLayout);
-
-
                             }
-
-
                         }
 
                         TextView attended = headerLayout.findViewById(R.id.AttendaceNo);
@@ -365,7 +338,7 @@ public class EventAnalytic extends AppCompatActivity {
         }
     }
 
-
+    // Show the relative event image for the interface
     private class ShowImage extends Thread {
 
         private String email;
@@ -437,177 +410,6 @@ public class EventAnalytic extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-            }
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-    // csv file function
-    private class MyThread2 extends Thread {
-
-        private String email;
-        private String username, phone;
-        private Handler handler;
-
-        HttpURLConnection urlConnection = null;
-
-        // 2.3 Constructor
-        public MyThread2(String email, Handler handler) {
-            this.email = email;
-            this.handler = handler;
-        }
-
-        @Override
-        public void run() {
-
-            try {
-
-                String eventString = "Mooncake Festival";
-                String encodedEventString = eventString.replace(" ", "%20");
-                // 1. Access to the Supabase URL
-                email = "yikhengl@gmail.com";
-                String tableUrl = "https://lqhrxmdxtxyycnftttks.supabase.co/rest/v1/";
-                String tableName = "Participation";
-                String tableFilter = "select=Attendance,User_Email,User(Username)&Event_Id=eq." + encodedEventString;
-                String urlString = tableUrl + tableName + "?" + tableFilter;
-
-                URL url = new URL(urlString);
-
-                Log.i("##### DEBUG #####", "url: " + url.toString());
-
-                urlConnection = (HttpURLConnection) url.openConnection();
-
-                // 2. API: Follow the format in Supabase (API Docs, Project Settings)
-                urlConnection.setRequestProperty("apiKey", getString(R.string.SUPABASE_KEY));
-                urlConnection.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
-
-
-                // 3. Obtain the status of connection
-                int responseCode = urlConnection.getResponseCode();
-                Log.i("##### DEBUG #####", "code: " + responseCode);
-
-                if (responseCode == 200) {
-
-                    BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                    String inputLine;
-                    StringBuilder response = new StringBuilder();
-
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
-
-                    String jsonResponse = response.toString();
-                    Log.i("##### DEBUG #####", "API Response: " + jsonResponse);
-
-
-                    try {
-                        JSONArray jsonArray = new JSONArray(jsonResponse);
-
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            JSONObject userObject = jsonObject.optJSONObject("User");
-
-
-                            if (jsonArray.length() > 0) {
-
-                                String Name = userObject.optString("Username");
-                                String Attendance = jsonObject.optString("Attendance");
-                                FileWriter fileWriter = null;
-
-                                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                                if (!downloadDir.exists()) {
-                                    if (!downloadDir.mkdirs()) {
-                                        Log.e("CSV", "Failed to create download directory");
-                                        return;
-                                    }
-                                }
-
-                                File csvFile = new File(downloadDir, "Attendance.csv");
-
-//                                File folder = new File(Environment.getExternalStorageDirectory() + "/Folder");
-//
-//                                boolean var = false;
-//                                if (!folder.exists())
-//                                    var = folder.mkdir();
-//
-//                                final String csvFile = folder.toString() + "/" + "Attendance.csv";
-//
-                                try {
-
-                                    fileWriter = new FileWriter(csvFile);
-
-                                    // Write the header row
-                                    JSONObject firstObject = jsonArray.getJSONObject(0);
-                                    Iterator<String> keys = firstObject.keys();
-                                    while (keys.hasNext()) {
-                                        String key = keys.next();
-                                        fileWriter.append(key);
-                                        if (keys.hasNext()) {
-                                            fileWriter.append(",");
-                                        }
-                                    }
-                                    fileWriter.append("\n");
-
-                                    // Write the data rows
-                                    for (int j = 0; j < jsonArray.length(); j++) {
-                                        JSONObject jsonCSV = jsonArray.getJSONObject(j);
-                                        Iterator<String> dataKeys = jsonCSV.keys();
-                                        while (dataKeys.hasNext()) {
-                                            String key = dataKeys.next();
-                                            String value = jsonCSV.getString(key);
-                                            fileWriter.append(value);
-                                            if (dataKeys.hasNext()) {
-                                                fileWriter.append(",");
-                                            }
-                                        }
-                                        fileWriter.append("\n");
-                                    }
-
-                                    fileWriter.flush();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                } finally {
-                                    try {
-                                        if (fileWriter != null) {
-                                            fileWriter.close();
-
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Toast.makeText(EventAnalytic.this, "CSV file generated successfully", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                        }
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                // Disconnect
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }

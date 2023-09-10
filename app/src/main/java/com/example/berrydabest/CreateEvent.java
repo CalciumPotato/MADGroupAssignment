@@ -69,11 +69,13 @@ public class CreateEvent extends AppCompatActivity {
         selectedDateTextView = findViewById(R.id.editTextEventDate);
         BottomNavigationView navigationView = findViewById(R.id.navigation);
 
+        // Request Permission on Reading External Storage
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted, request it
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
         }
 
+        // Back Button
         ImageView backBtn = findViewById(R.id.img_back);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +114,7 @@ public class CreateEvent extends AppCompatActivity {
 
     }
 
+    // Select the event date by picking it from the calander dialog
     public void showDatePickerDialog(View view) {
 
         Calendar calendar = Calendar.getInstance();
@@ -141,14 +144,14 @@ public class CreateEvent extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    // Create an intent to select images from the device's gallery
     public void onSelectImagesButtonClick(View view) {
-        // Create an intent to select images from the device's gallery
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         startActivityForResult(intent, IMAGE_SELECTION_REQUEST);
     }
 
-    // Selecting images
+    // Selecting images and show it after choosing the image below the button
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -170,7 +173,7 @@ public class CreateEvent extends AppCompatActivity {
 
     Handler mHandler = new Handler();
 
-    // Submit Button
+    // Submit Button, write in on database.
     public void onCreateEventButtonClick(View view) {
 
         EditText eventNameText = findViewById(R.id.editTextEventName);
@@ -189,10 +192,15 @@ public class CreateEvent extends AppCompatActivity {
         String eventFee = eventFeeText.getText().toString();
 
         ImageView eventImage = findViewById(R.id.ImageView);
+
+        //Check if the EditText is null or not
         if (eventName.isEmpty() || eventVenue.isEmpty() || eventDescription.isEmpty() || eventFee.isEmpty() || eventDate.isEmpty() || eventImage.getDrawable() == null) {
 
             Toast.makeText(CreateEvent.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
         } else {
+
+            // Connecting to threads
+
             MyThread connectingThread = new MyThread(eventName, eventDate, eventVenue, eventDescription, eventFee, mHandler);
             MyThread1 connectingThread1 = new MyThread1();
 
@@ -215,24 +223,9 @@ public class CreateEvent extends AppCompatActivity {
 
         }
 
-
-
-//        Intent intent = new Intent(this, QR_Generator.class);
-//        intent.putExtra("eventName", eventName);
-//        intent.putExtra("eventCode", EventCode); // Assuming you have eventCode defined somewhere
-//        startActivity(intent);
     }
 
-    // Numeric checking function
-    private boolean isNumeric(String str) {
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
+    // Write in Database Thread
     private class MyThread extends Thread{
         private String mName;
         private String mDate;
@@ -270,11 +263,6 @@ public class CreateEvent extends AppCompatActivity {
                 String eventCode = mName + randomNumber;
 
                 EventName = mName;
-//                // put passing variable to the functions
-//                SendingClass receivingObj = new SendingClass();
-//                PassVarInterface passVarMethod = receivingObj;
-
-//                passVarMethod.PassVar(mName, eventCode);
 
                 email = "yikhengl@gmail.com";
                 //create Json object to put data (insert based on the column name) :be careful
@@ -298,11 +286,6 @@ public class CreateEvent extends AppCompatActivity {
 
                 //check the data from web server to see whether request get success or not
                 if(hc.getResponseCode() == 200){ // check if success HTTP request, successfully accessed a web API, successfully read from the webpage
-                    //OK response code
-                    //result:response come from web server
-                    // Intent intent = new Intent(CreateEvent.this, LinkDBActivity.class);
-                    // intent.putExtra("response",result);
-                    // startActivity(intent);
 
                 }else if (hc.getResponseCode()==201){
                     Log.i("MainActivity","You have successfully inserted an entry to Supabase.");
@@ -434,6 +417,7 @@ public class CreateEvent extends AppCompatActivity {
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
+    // Read Image file from the filepath
     private static byte[] readImageFile(String imagePath) throws IOException {
         FileInputStream fileInputStream = null;
         byte[] imageData = null;
@@ -455,6 +439,7 @@ public class CreateEvent extends AppCompatActivity {
     }
 
 
+    // Getting the file name
     private String getFilenameFromURI(Uri contentUri) {
         String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = getContentResolver().query(contentUri, projection, null, null, null);
@@ -471,8 +456,7 @@ public class CreateEvent extends AppCompatActivity {
         return filePath;
     }
 
-    // QR
-
+    // QR generator
     public void generateQRCode(String data) {
         try {
             // Encode the data into a QR Code
@@ -496,6 +480,7 @@ public class CreateEvent extends AppCompatActivity {
         }
     }
 
+    // Store in Supabase
     public void saveBitmapToStorage(Bitmap bitmap) {
         String filename = EventName +".jpeg"; // Choose a filename and extension
         try {
@@ -521,23 +506,9 @@ public class CreateEvent extends AppCompatActivity {
         return file.getAbsolutePath();
     }
 
-
-
-
-
     public interface PassVarInterface {
         void PassVar(String mName, String eventCode);
     }
-
-//    public class SendingClass implements PassVarInterface {
-//
-//            public void PassVar (String mName, String eventCode){
-//                QR_Generator.ReceivingClass receivingObj = new QR_Generator.ReceivingClass();
-//                receivingObj.Name(mName);
-//                receivingObj.Code(eventCode);
-//
-//        }
-//    }
 
 }
 
