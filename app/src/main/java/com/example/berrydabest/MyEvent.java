@@ -225,7 +225,7 @@ public class MyEvent extends AppCompatActivity {
                                                         Bitmap bm = BitmapFactory.decodeStream(input);
                                                         ImageView img = Activity_Profile_Tools.createImg(MyEvent.this, bm);
 
-                                                        handler.post(() -> eventDetails.addView(img, 0));
+                                                        handler.post(() -> eventCard.addView(img, 0));
                                                     }
                                                     catch(IOException e){
                                                         e.printStackTrace();
