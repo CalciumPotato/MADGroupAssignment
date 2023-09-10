@@ -188,10 +188,10 @@ public class CreateEvent extends AppCompatActivity {
         EditText eventVenueText = findViewById(R.id.editTextEventVenue);
         String eventVenue = eventVenueText.getText().toString();
 
-        EditText eventDateText = findViewById(R.id.editTextEventDescription);
+        TextView eventDateText = findViewById(R.id.editTextEventDate);
         String eventDate = eventDateText.getText().toString();
 
-        TextView eventDescriptionText = findViewById(R.id.editTextEventDate);
+        EditText eventDescriptionText = findViewById(R.id.editTextEventDescription);
         String eventDescription = eventDescriptionText.getText().toString();
 
         EditText eventFeeText = findViewById(R.id.editTextEventFees);
