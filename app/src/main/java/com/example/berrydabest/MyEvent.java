@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -44,6 +46,11 @@ public class MyEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_event);
+
+        // Change status bar colour
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.darker_grey));
+        }
 
         Handler handler = new Handler();
 
@@ -218,7 +225,7 @@ public class MyEvent extends AppCompatActivity {
                                                         Bitmap bm = BitmapFactory.decodeStream(input);
                                                         ImageView img = Activity_Profile_Tools.createImg(MyEvent.this, bm);
 
-                                                        handler.post(() -> eventDetails.addView(img, 0));
+                                                        handler.post(() -> eventCard.addView(img, 0));
                                                     }
                                                     catch(IOException e){
                                                         e.printStackTrace();

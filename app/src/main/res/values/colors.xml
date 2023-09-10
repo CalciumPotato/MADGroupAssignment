@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="background_grey">#313338</color>
+    <color name="darker_grey">#1e1f22</color>
     <color name="btn_selected">#42444a</color>
     <color name="btn_deselected">#2b2d31</color>
 </resources>
