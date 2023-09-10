@@ -111,7 +111,7 @@ public class EventAnalytic extends AppCompatActivity {
         participantListImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyThread connectThread = new MyThread("yikhengl@gmail.com", handler);
+                MyThread connectThread = new MyThread(email, handler);
                 connectThread.start();
             }
         });
@@ -122,7 +122,7 @@ public class EventAnalytic extends AppCompatActivity {
         AttendanceQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DisplayQR connectThread = new DisplayQR("yikhengl@gmail.com", handler);
+                DisplayQR connectThread = new DisplayQR(email, handler);
                 connectThread.start();
             }
 
