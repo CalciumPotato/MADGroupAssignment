@@ -1,5 +1,7 @@
 package com.example.berrydabest;
 
+import static com.example.berrydabest.Activity_Profile_Tools.readPreference;
+
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -59,6 +61,7 @@ public class CreateEvent extends AppCompatActivity {
     private static String EventCode;
     private static String EventName;
     private static String ImagePath;
+    private static String email;
     private static final int QR_CODE_SIZE = 500;
 
     @Override
@@ -66,6 +69,9 @@ public class CreateEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
+        // get the email at put it as global
+        String Email = readPreference(this, "Email", "");
+        email = Email;
         // Change status bar colour
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.darker_grey));
@@ -238,7 +244,6 @@ public class CreateEvent extends AppCompatActivity {
         private String mVenue;
         private String mDesc;
         private String mFee;
-        private String email;
         private Handler mHandler;
 
         public MyThread(String name, String date, String venue, String desc, String fee, Handler handler){
@@ -262,15 +267,8 @@ public class CreateEvent extends AppCompatActivity {
                 hc.setRequestProperty("Content-Type","application/json");
                 hc.setRequestProperty("Prefer","Prefer");
 
-
-                Random random = new Random();
-                int randomNumber = random.nextInt(99) + 1;
-
-                String eventCode = mName + randomNumber;
-
                 EventName = mName;
 
-                email = "yikhengl@gmail.com";
                 //create Json object to put data (insert based on the column name) :be careful
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("Event_Name" , mName);
@@ -279,7 +277,7 @@ public class CreateEvent extends AppCompatActivity {
                 jsonObject.put("Event_Description" , mDesc);
                 jsonObject.put("Event_Fee" , mFee);
                 jsonObject.put("Email", email);
-                jsonObject.put("Event_Code", eventCode);
+                jsonObject.put("Event_Code", EventCode);
                 hc.setDoOutput(true);
                 OutputStream output = hc.getOutputStream();
                 output.write(jsonObject.toString().getBytes());
