@@ -288,6 +288,8 @@ public class Activity_Profile_Tools extends AppCompatActivity {
     static void clearPreference(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("Secret", Context.MODE_PRIVATE);
         sharedPreferences.edit().clear().commit();
+        SharedPreferences google= context.getSharedPreferences("com.google.android.gms.signin",Context.MODE_PRIVATE);
+        google.edit().clear().commit();
         return;
     }
 }

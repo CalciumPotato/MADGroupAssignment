@@ -50,8 +50,8 @@ public class SignIn extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_sign_in);
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-        if(doesSharedPreferencesExist(this,"Secret") == true || acct != null){
+
+        if(doesSharedPreferencesExist(this,"Secret") == true || doesSharedPreferencesExist(this,"com.google.android.gms.signin")==true){
             showMessage("Auto LogIn");
             Intent intent = new Intent(this, MainPage.class);
             startActivity(intent);
@@ -280,7 +280,7 @@ public class SignIn extends AppCompatActivity {
                             Intent intent = new Intent(SignIn.this, MainPage.class);
                             startActivity(intent);
                             overridePendingTransition(R.anim.right, R.anim.left);
-
+                            appendPreference(SignIn.this,"Email",email);
                             showMessage(" Welcome back !");
                             finish();
                         }
