@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -55,11 +56,13 @@ public class MyEvent extends AppCompatActivity {
         Handler handler = new Handler();
 
         String email = readPreference(this, "Email", "notFound");
+        Log.i("##### DEBUG #####", "email: " + email);
 
         LinearLayout ll = findViewById(R.id.eventLayout);
         Button upbtn = findViewById(R.id.upcoming);
         Button pasbtn = findViewById(R.id.past);
         BottomNavigationView navigationView = findViewById(R.id.navigation);
+        navigationView.setSelectedItemId(R.id.navigation_myEvent);
 
         btn_upcoming = true;
         upbtn.setBackgroundColor(upbtn.getContext().getResources().getColor(R.color.btn_selected));

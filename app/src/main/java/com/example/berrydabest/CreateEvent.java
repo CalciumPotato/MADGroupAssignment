@@ -232,7 +232,7 @@ public class CreateEvent extends AppCompatActivity {
             connectingThread2.start();
 
             Toast.makeText(CreateEvent.this, "Event Has been created!", Toast.LENGTH_SHORT).show();
-
+            finish();
         }
 
     }
